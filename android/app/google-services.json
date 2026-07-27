@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "293311041317",
+    "project_id": "blackmarket-6981c",
+    "storage_bucket": "blackmarket-6981c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:293311041317:android:ef5769723fad4354f9d4cc",
+        "android_client_info": {
+          "package_name": "com.black_market"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "293311041317-japo9vgiuo9ft8mpfjibd51e1r1tigh7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBB52Gc4PKMIgF5jc5ZmnPYfGSOjflSvv4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "293311041317-japo9vgiuo9ft8mpfjibd51e1r1tigh7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
