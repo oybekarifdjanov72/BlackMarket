@@ -117,11 +117,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 return SingleChildScrollView(
                   child: SafeArea(
                     child: Padding(
-                      padding: const EdgeInsets.all(25),
+                      padding: const EdgeInsets.all(16),
                       child: Center(
                         child: Column(
                           children: [
-                            const SizedBox(height: 20),
                             Row(
                               children: [
                                 InkWell(
@@ -276,84 +275,88 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                ElevatedButton(
-                                  onPressed: () {
-                                    if (isEditing) {
-                                      context.read<ProfileCubit>().updateProfile(fullName: nameController.text);
-                                      setState(() {
-                                        isEditing = false;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        isEditing = true;
-                                        nameController.text = fullName;
-                                      });
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: bgColor,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 25,
-                                      vertical: 15,
-                                    ),
-                                    side: BorderSide(color: themeColor, width: 2),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    minimumSize: const Size(160, 55),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        isEditing ? Icons.save_alt_outlined : Icons.mode_edit_outline_outlined,
-                                        size: 24,
-                                        color: themeColor,
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      if (isEditing) {
+                                        context.read<ProfileCubit>().updateProfile(fullName: nameController.text);
+                                        setState(() {
+                                          isEditing = false;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          isEditing = true;
+                                          nameController.text = fullName;
+                                        });
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: bgColor,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 25,
+                                        vertical: 15,
                                       ),
-                                      const SizedBox(width: 10),
-                                      Text(
-                                        isEditing ? "SAVE" : "EDIT PROFILE",
-                                        style: GoogleFonts.workSans(
-                                          fontSize: 14,
+                                      side: BorderSide(color: themeColor, width: 2),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      minimumSize: const Size(160, 55),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          isEditing ? Icons.save_alt_outlined : Icons.mode_edit_outline_outlined,
+                                          size: 24,
                                           color: themeColor,
-                                          fontWeight: FontWeight.bold,
                                         ),
-                                      ),
-                                    ],
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          isEditing ? "Save" : "Edit",
+                                          style: GoogleFonts.workSans(
+                                            fontSize: 18,
+                                            color: themeColor,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(width: 15),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    final message = 'Hello! This is my profile:\n\nName: $fullName\nEmail: $email';
-                                    Share.share(message);
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: bgColor,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 25,
-                                      vertical: 15,
-                                    ),
-                                    side: BorderSide(color: themeColor, width: 2),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    minimumSize: const Size(160, 55),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(Icons.share, size: 24, color: themeColor),
-                                      const SizedBox(width: 10),
-                                      Text(
-                                        "SHARE",
-                                        style: GoogleFonts.workSans(
-                                          fontSize: 14,
-                                          color: themeColor,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      final message = 'Hello! This is my profile:\n\nName: $fullName\nEmail: $email';
+                                      Share.share(message);
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: bgColor,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 25,
+                                        vertical: 15,
                                       ),
-                                    ],
+                                      side: BorderSide(color: themeColor, width: 2),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      minimumSize: const Size(160, 55),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(Icons.share, size: 24, color: themeColor),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          "Share",
+                                          style: GoogleFonts.workSans(
+                                            fontSize: 18,
+                                            color: themeColor,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],

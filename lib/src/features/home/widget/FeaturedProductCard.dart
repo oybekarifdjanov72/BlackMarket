@@ -22,129 +22,122 @@ class FeaturedProductCard extends StatelessWidget {
       builder: (context, settingsState) {
         final isDark = settingsState.isDarkMode;
         final themeColor = AppColors.instance.getTextPrimary(isDark);
-        final themeColorSecondary = AppColors.instance.getTextSecondary(isDark);
-        final cardColor = isDark ? AppColors.instance.shadeblack : AppColors.instance.white;
+        final cardColor = AppColors.instance.getCardBackground(isDark);
 
-        return Center(
-          child: GestureDetector(
-            onTap: onTap,
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.85, 
-              margin: const EdgeInsets.symmetric(vertical: 4),
-              decoration: BoxDecoration(
-                color: cardColor,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: themeColor.withOpacity(0.1)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 4,
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: isDark ? Colors.grey.shade900 : Colors.grey.shade100,
-                        borderRadius: const BorderRadius.horizontal(left: Radius.circular(20)),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.horizontal(left: Radius.circular(20)),
-                        child: Image.network(
-                          product.thumbnail,
-                          fit: BoxFit.contain,
-                          errorBuilder: (_, __, ___) => const Icon(Icons.image_not_supported),
+        return GestureDetector(
+          onTap: onTap,
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: cardColor,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    height: 180,
+                    decoration: BoxDecoration(
+                      color: isDark ? AppColors.instance.shadeblack : Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Image.network(
+                        product.thumbnail,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) => Icon(
+                          Icons.image_not_supported,
+                          color: themeColor,
+                          size: 30,
                         ),
                       ),
                     ),
                   ),
-                  Expanded(
-                    flex: 6,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
+                ),
+                const SizedBox(width: 15),
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        product.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.workSans(
+                          color: themeColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        product.brand,
+                        style: GoogleFonts.workSans(
+                          color: Colors.grey[500],
+                          fontSize: 12,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
                         children: [
+                          const Icon(Icons.star, color: Colors.amber, size: 16),
+                          const SizedBox(width: 4),
                           Text(
-                            product.title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            product.rating.toString(),
                             style: GoogleFonts.workSans(
                               color: themeColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            product.brand,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.workSans(
-                              color: themeColorSecondary,
-                              fontSize: 12,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Row(
-                            children: [
-                              const Icon(Icons.star, color: Colors.amber, size: 14),
-                              const SizedBox(width: 4),
-                              Text(
-                                product.rating.toString(),
-                                style: GoogleFonts.workSans(
-                                  color: themeColor,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            product.warrantyInformation ?? "No warranty",
-                            maxLines: 1,
-                            style: GoogleFonts.workSans(
-                              color: isDark ? Colors.greenAccent : Colors.green[700],
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            product.shippingInformation ?? "",
-                            maxLines: 1,
-                            style: GoogleFonts.workSans(
-                              color: themeColorSecondary,
-                              fontSize: 9,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            "\$${product.price}",
-                            style: GoogleFonts.workSans(
-                              color: AppColors.instance.red,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              shadows: [
-                                const Shadow(
-                                  blurRadius: 10.0,
-                                  color: Colors.redAccent,
-                                  offset: Offset(0, 0),
-                                ),
-                              ],
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ],
                       ),
-                    ),
+                      const SizedBox(height: 4),
+                      Text(
+                        product.warrantyInformation ?? "No warranty",
+                        style: GoogleFonts.workSans(
+                          color: AppColors.instance.greenAccent,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        product.shippingInformation ?? "Standard shipping",
+                        style: GoogleFonts.workSans(
+                          color: Colors.grey[500],
+                          fontSize: 12,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        "\$${product.price}",
+                        style: GoogleFonts.workSans(
+                          color: AppColors.instance.red,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                          shadows: [
+                            Shadow(
+                              color: AppColors.instance.red.withOpacity(0.8),
+                              blurRadius: 15,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );

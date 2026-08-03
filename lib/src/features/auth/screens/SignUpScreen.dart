@@ -44,6 +44,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         final isDark = settingsState.isDarkMode;
         final themeColor = AppColors.instance.getTextPrimary(isDark);
         final bgColor = AppColors.instance.getBackground(isDark);
+        final containerColor = AppColors.instance.getCardBackground(isDark);
 
         return Scaffold(
           backgroundColor: bgColor,
@@ -97,6 +98,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               if (state is AuthError) {
                 toastification.show(
                   type: ToastificationType.error,
+                  autoCloseDuration: Duration(seconds: 3),
                   title: Text(
                     state.message,
                     style: GoogleFonts.workSans(
@@ -109,6 +111,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               } else if (state is AuthLoaded) {
                 toastification.show(
                   type: ToastificationType.success,
+                  autoCloseDuration: Duration(seconds: 3),
                   title: Text(
                     "Successfully authorized",
                     style: GoogleFonts.workSans(
@@ -154,7 +157,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             width: double.infinity,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
-                              color: isDark ? AppColors.instance.white : AppColors.instance.black,
+                              color: containerColor,
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(16),
@@ -248,10 +251,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   }
                                 },
                                 style: OutlinedButton.styleFrom(
-                                  backgroundColor: isDark ? AppColors.instance.white : AppColors.instance.black,
+                                  backgroundColor: containerColor,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadiusGeometry.circular(20),
-                                    side: BorderSide(color: isDark ? AppColors.instance.white : AppColors.instance.black),
+                                    borderRadius: BorderRadius.circular(20),
+                                    side: BorderSide(color: themeColor.withOpacity(0.1)),
                                   ),
                                   fixedSize: const Size(150, 50),
                                 ),
@@ -260,13 +263,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     Icon(
                                       Icons.account_circle_outlined,
                                       size: 24,
-                                      color: isDark ? AppColors.instance.black : AppColors.instance.white,
+                                      color: themeColor,
                                     ),
                                     const SizedBox(width: 10),
                                     Text(
                                       "Google",
                                       style: GoogleFonts.workSans(
-                                        color: isDark ? AppColors.instance.black : AppColors.instance.white,
+                                        color: themeColor,
                                         fontSize: 14,
                                       ),
                                     ),
@@ -277,10 +280,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               OutlinedButton(
                                 onPressed: () {},
                                 style: OutlinedButton.styleFrom(
-                                  backgroundColor: isDark ? AppColors.instance.white : AppColors.instance.black,
+                                  backgroundColor: containerColor,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
-                                    side: BorderSide(color: isDark ? AppColors.instance.white : AppColors.instance.black),
+                                    side: BorderSide(color: themeColor.withOpacity(0.1)),
                                   ),
                                   fixedSize: const Size(150, 50),
                                 ),
@@ -289,13 +292,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     Icon(
                                       Icons.facebook,
                                       size: 24,
-                                      color: isDark ? AppColors.instance.black : AppColors.instance.white,
+                                      color: themeColor,
                                     ),
                                     const SizedBox(width: 10),
                                     Text(
                                       "Facebook",
                                       style: GoogleFonts.workSans(
-                                        color: isDark ? AppColors.instance.black : AppColors.instance.white,
+                                        color: themeColor,
                                         fontSize: 14,
                                       ),
                                     ),

@@ -24,11 +24,11 @@ class AppButton extends StatelessWidget {
               side: BorderSide(color: AppColors.instance.white, width: 2),
               borderRadius: BorderRadius.circular(30),
             ),
-            fixedSize: const Size(150, 50),
+            fixedSize: const Size(170, 55),
           ),
           child: Text(
             text,
-            style: GoogleFonts.workSans(color: AppColors.instance.white, fontSize: 20),
+            style: GoogleFonts.workSans(color: AppColors.instance.white, fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
       ),

@@ -1,12 +1,14 @@
-import 'package:black_market/src/features/settings/cubit/SettingsCubit.dart';
-import 'package:black_market/src/features/settings/cubit/SettingsState.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:toastification/toastification.dart';
 
 import '../../../core/model/ProductsModel.dart';
 import '../../../core/utils/consts/AppColors.dart';
+import '../../basket/cubit/BasketCubit.dart';
+import '../../settings/cubit/SettingsCubit.dart';
+import '../../settings/cubit/SettingsState.dart';
 
 class ProductCard extends StatelessWidget {
   final ProductModel product;
@@ -27,12 +29,13 @@ class ProductCard extends StatelessWidget {
         final isDark = state.isDarkMode;
         final themeColor = AppColors.instance.getTextPrimary(isDark);
         final themeColorSecondary = AppColors.instance.getTextSecondary(isDark);
+        final cardColor = AppColors.instance.getCardBackground(isDark);
 
         return GestureDetector(
           onTap: onTap,
           child: Card(
             elevation: 5,
-            color: isDark ? AppColors.instance.shadeblack : AppColors.instance.white,
+            color: cardColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(18),
               side: BorderSide(color: themeColor.withOpacity(0.1)),
@@ -42,18 +45,23 @@ class ProductCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  flex: 5,
+                  flex: 4,
                   child: Stack(
                     children: [
                       Container(
                         width: double.infinity,
-                        color: isDark ? Colors.grey.shade900 : Colors.grey.shade100,
+                        color: isDark
+                            ? AppColors.instance.shadeblack
+                            : Colors.grey.shade100,
                         child: Image.network(
                           product.thumbnail,
                           fit: BoxFit.contain,
                           errorBuilder: (_, __, ___) {
                             return Center(
-                              child: Icon(Icons.image_not_supported, color: themeColorSecondary),
+                              child: Icon(
+                                Icons.image_not_supported,
+                                color: themeColorSecondary,
+                              ),
                             );
                           },
                         ),
@@ -75,7 +83,7 @@ class ProductCard extends StatelessWidget {
                             style: GoogleFonts.workSans(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
-                              fontSize: 11, // Increased
+                              fontSize: 12,
                             ),
                           ),
                         ),
@@ -84,9 +92,9 @@ class ProductCard extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  flex: 5,
+                  flex: 6,
                   child: Padding(
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -97,7 +105,7 @@ class ProductCard extends StatelessWidget {
                           style: GoogleFonts.workSans(
                             color: themeColor,
                             fontWeight: FontWeight.bold,
-                            fontSize: 15, // Increased from 13
+                            fontSize: 16,
                           ),
                         ),
                         Text(
@@ -106,36 +114,40 @@ class ProductCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.workSans(
                             color: themeColorSecondary,
-                            fontSize: 12,
+                            fontSize: 13,
                           ),
                         ),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: 4),
                         Row(
                           children: [
-                            const Icon(Icons.star, color: Colors.amber, size: 14),
+                            const Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                              size: 14,
+                            ),
                             const SizedBox(width: 4),
                             Text(
                               product.rating.toString(),
                               style: GoogleFonts.workSans(
                                 color: themeColor,
                                 fontWeight: FontWeight.w600,
-                                fontSize: 12,
+                                fontSize: 13,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: 4),
                         Text(
                           product.warrantyInformation ?? "No warranty",
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.workSans(
-                            color: isDark ? Colors.greenAccent : Colors.green[700],
-                            fontSize: 11,
+                            color: Colors.greenAccent,
+                            fontSize: 12,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const Spacer(),
+                        const SizedBox(height: 18),
                         Row(
                           children: [
                             Expanded(
@@ -144,30 +156,51 @@ class ProductCard extends StatelessWidget {
                                 style: GoogleFonts.workSans(
                                   color: AppColors.instance.red,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                                  fontSize: 18,
                                   shadows: [
-                                    const Shadow(
-                                      blurRadius: 5.0,
-                                      color: Colors.redAccent,
-                                      offset: Offset(0, 0),
+                                    Shadow(
+                                      blurRadius: 10.0,
+                                      color: AppColors.instance.red.withOpacity(
+                                        0.8,
+                                      ),
+                                      offset: const Offset(0, 0),
                                     ),
                                   ],
                                 ),
                               ),
                             ),
                             InkWell(
-                              onTap: onAddToCart,
+                              onTap: () {
+                                context.read<BasketCubit>().addToBasket(
+                                  product,
+                                );
+                                toastification.show(
+                                  title: Text(
+                                    "${product.title} added to basket",
+                                    style: GoogleFonts.workSans(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  type: ToastificationType.info,
+                                  autoCloseDuration: Duration(seconds: 3),
+                                );
+                              },
                               borderRadius: BorderRadius.circular(10),
                               child: Container(
                                 padding: const EdgeInsets.all(6),
                                 decoration: BoxDecoration(
-                                  color: isDark ? AppColors.instance.white : AppColors.instance.black,
-                                  borderRadius: BorderRadius.circular(8),
+                                  color: isDark
+                                      ? AppColors.instance.white
+                                      : AppColors.instance.black,
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Icon(
                                   CupertinoIcons.cart_badge_plus,
-                                  color: isDark ? AppColors.instance.black : AppColors.instance.white,
-                                  size: 24,
+                                  color: isDark
+                                      ? AppColors.instance.black
+                                      : AppColors.instance.white,
+                                  size: 22,
                                 ),
                               ),
                             ),

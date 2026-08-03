@@ -20,9 +20,9 @@ class AppColors {
   final Color red = const Color(0xFFFF5252);
   final Color greenAccent = const Color(0xFF69F0AE);
 
-  Color getBackground(bool isDark) => isDark ? black : white;
+  Color getBackground(bool isDark) => isDark ? black : const Color(0xFFF5F5F5);
   Color getTextPrimary(bool isDark) => isDark ? white : black;
   Color getTextSecondary(bool isDark) => isDark ? white54 : Colors.black54;
-  Color getCardBackground(bool isDark) => isDark ? shadeblack : gray300.withOpacity(0.3);
+  Color getCardBackground(bool isDark) => isDark ? shadeblack : white;
   Color getBorderColor(bool isDark) => isDark ? white : black;
 }

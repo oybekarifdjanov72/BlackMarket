@@ -77,12 +77,12 @@ class ProfileCubit extends Cubit<ProfileState> {
 
       if (result != null && result.files.single.path != null) {
         final path = result.files.single.path!;
-        
+
         emit(state.copyWith(localImagePath: path, status: ProfileStatus.loading));
-        
+
         final file = File(path);
         final user = FirebaseAuth.instance.currentUser;
-        
+
         if (user != null) {
           final storageRef = FirebaseStorage.instance
               .ref()

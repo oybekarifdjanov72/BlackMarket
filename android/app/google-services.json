@@ -7,12 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:293311041317:android:ef5769723fad4354f9d4cc",
+        "mobilesdk_app_id": "1:293311041317:android:a27697abdb860421f9d4cc",
         "android_client_info": {
           "package_name": "com.black_market"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "293311041317-ukb11fo63g4s5eer4qr7mtlodt739eu6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.black_market",
+            "certificate_hash": "4106a1023647b3d18d3e4c40f710270fc942adc6"
+          }
+        },
         {
           "client_id": "293311041317-japo9vgiuo9ft8mpfjibd51e1r1tigh7.apps.googleusercontent.com",
           "client_type": 3
@@ -29,6 +37,13 @@
             {
               "client_id": "293311041317-japo9vgiuo9ft8mpfjibd51e1r1tigh7.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "293311041317-fvamr3th2poh56ouki4rjf5l8a8qk846.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.blackMarket"
+              }
             }
           ]
         }

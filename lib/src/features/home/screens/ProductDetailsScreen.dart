@@ -8,8 +8,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toastification/toastification.dart';
 import '../../../core/utils/consts/AppRouter.dart';
+import '../../basket/cubit/BasketCubit.dart';
 import '../../favorites/cubit/FavoritesCubit.dart';
 import '../../favorites/cubit/FavoritesState.dart';
+import '../widget/QuantityWidget.dart';
+import '../widget/RowTextWidget.dart';
 
 class SellPage extends StatefulWidget {
   final ProductModel model;
@@ -32,6 +35,7 @@ class _SellPageState extends State<SellPage> {
         final isDark = settingsState.isDarkMode;
         final themeColor = AppColors.instance.getTextPrimary(isDark);
         final bgColor = AppColors.instance.getBackground(isDark);
+        final badgeBgColor = AppColors.instance.getCardBackground(isDark);
 
         return Scaffold(
           backgroundColor: bgColor,
@@ -70,7 +74,6 @@ class _SellPageState extends State<SellPage> {
                     ],
                   ),
                 ),
-
                 Container(
                   width: double.infinity,
                   constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height * 0.45),
@@ -104,7 +107,7 @@ class _SellPageState extends State<SellPage> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 5),
                       Text(
                         model.brand,
                         style: GoogleFonts.workSans(
@@ -113,7 +116,7 @@ class _SellPageState extends State<SellPage> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 15),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -139,7 +142,7 @@ class _SellPageState extends State<SellPage> {
                               Text(
                                 model.rating.toStringAsFixed(1),
                                 style: GoogleFonts.workSans(
-                                  color: themeColor, 
+                                  color: themeColor,
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -148,25 +151,27 @@ class _SellPageState extends State<SellPage> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 25),
-                      
-                      // Shipping & Warranty Section
+                      const SizedBox(height: 18),
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: isDark ? AppColors.instance.shadeblack : Colors.grey.shade100,
+                          color: badgeBgColor,
                           borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: themeColor.withOpacity(0.1)),
                         ),
                         child: Column(
                           children: [
-                            _buildInfoRow(Icons.verified_user_outlined, "Warranty", model.warrantyInformation ?? "No warranty", themeColor, isDark),
-                            const Divider(height: 24),
-                            _buildInfoRow(Icons.local_shipping_outlined, "Shipping", model.shippingInformation ?? "No shipping info", themeColor, isDark),
+                            buildInfoRow(Icons.verified_user_outlined, "Warranty",
+                                model.warrantyInformation ?? "No warranty", themeColor, isDark),
+                            SizedBox(height: 5,),
+                            Divider(height: 2, color: themeColor),
+                            SizedBox(height: 5,),
+                            buildInfoRow(Icons.local_shipping_outlined, "Shipping",
+                                model.shippingInformation ?? "No shipping info", themeColor, isDark),
                           ],
                         ),
                       ),
-                      
-                      const SizedBox(height: 25),
+                      const SizedBox(height: 18),
                       Text(
                         "Description",
                         style: GoogleFonts.workSans(
@@ -184,13 +189,13 @@ class _SellPageState extends State<SellPage> {
                           height: 1.5,
                         ),
                       ),
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 24),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
                             children: [
-                              _buildQuantityButton(Icons.remove, () {
+                              buildQuantityButton(Icons.remove, () {
                                 if (quantity > 1) setState(() => quantity--);
                               }, themeColor),
                               Padding(
@@ -198,24 +203,24 @@ class _SellPageState extends State<SellPage> {
                                 child: Text(
                                   quantity.toString(),
                                   style: GoogleFonts.workSans(
-                                    color: themeColor, 
-                                    fontSize: 22, 
+                                    color: themeColor,
+                                    fontSize: 22,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
-                              _buildQuantityButton(Icons.add, () {
+                              buildQuantityButton(Icons.add, () {
                                 setState(() => quantity++);
                               }, themeColor),
                             ],
                           ),
                           BlocBuilder<FavoriteCubit, FavoriteState>(
                             builder: (context, state) {
-                              final isFavorite = context.read<FavoriteCubit>().isFavorite(model);
+                              final isFav = context.read<FavoriteCubit>().isFavorite(model);
                               return IconButton(
                                 icon: Icon(
-                                  isFavorite ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark,
-                                  color: isFavorite ? AppColors.instance.cyanAccent : themeColor,
+                                  isFav ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark,
+                                  color: isFav ? AppColors.instance.cyanAccent : themeColor,
                                   size: 30,
                                 ),
                                 onPressed: () => context.read<FavoriteCubit>().toggleFavorite(model),
@@ -227,9 +232,12 @@ class _SellPageState extends State<SellPage> {
                       const SizedBox(height: 40),
                       ElevatedButton(
                         onPressed: () async {
+                          context.read<BasketCubit>().addToBasket(model, quantity: quantity);
                           toastification.show(
-                            title: Text('${model.title} x$quantity added to cart', style: GoogleFonts.workSans(fontSize: 16)),
-                            type: ToastificationType.success,
+                            autoCloseDuration: const Duration(seconds: 3),
+                            title: Text('${model.title} x$quantity added to cart',
+                                style: GoogleFonts.workSans(fontSize: 16)),
+                            type: ToastificationType.info,
                           );
                           setState(() => _addedToCart = true);
                           await Future.delayed(const Duration(seconds: 1));
@@ -248,7 +256,7 @@ class _SellPageState extends State<SellPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              _addedToCart ? "ADDED" : "ADD TO CART",
+                              _addedToCart ? "Added" : "Add to cart",
                               style: GoogleFonts.workSans(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -260,7 +268,8 @@ class _SellPageState extends State<SellPage> {
                               duration: const Duration(milliseconds: 300),
                               child: _addedToCart
                                   ? const Icon(Icons.check_circle, color: Colors.green, size: 28)
-                                  : Icon(Icons.shopping_cart_outlined, color: isDark ? Colors.black : Colors.white, size: 28),
+                                  : Icon(Icons.shopping_cart_outlined,
+                                      color: isDark ? Colors.black : Colors.white, size: 28),
                             ),
                           ],
                         ),
@@ -274,36 +283,6 @@ class _SellPageState extends State<SellPage> {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildInfoRow(IconData icon, String label, String value, Color themeColor, bool isDark) {
-    return Row(
-      children: [
-        Icon(icon, color: AppColors.instance.cyanAccent, size: 24),
-        const SizedBox(width: 12),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(label, style: GoogleFonts.workSans(color: themeColor.withOpacity(0.5), fontSize: 12)),
-            Text(value, style: GoogleFonts.workSans(color: themeColor, fontSize: 14, fontWeight: FontWeight.bold)),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildQuantityButton(IconData icon, VoidCallback onTap, Color themeColor) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          border: Border.all(color: themeColor.withOpacity(0.3)),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Icon(icon, color: themeColor, size: 20),
-      ),
     );
   }
 }

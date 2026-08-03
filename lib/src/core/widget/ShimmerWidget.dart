@@ -87,39 +87,41 @@ class FeaturedCardShimmer extends StatelessWidget {
       baseColor: baseColor,
       highlightColor: highlightColor,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(25),
         ),
         child: Row(
           children: [
             Expanded(
-              flex: 4,
+              flex: 2,
               child: Container(
-                decoration: const BoxDecoration(
+                height: 100,
+                decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
+                  borderRadius: BorderRadius.circular(15),
                 ),
               ),
             ),
+            const SizedBox(width: 20),
             Expanded(
-              flex: 6,
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(width: double.infinity, height: 16, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4))),
-                    const SizedBox(height: 8),
-                    Container(width: 100, height: 12, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4))),
-                    const SizedBox(height: 12),
-                    Container(width: 60, height: 12, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4))),
-                    const Spacer(),
-                    Container(width: 80, height: 20, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4))),
-                  ],
-                ),
+              flex: 3,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(width: double.infinity, height: 20, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4))),
+                  const SizedBox(height: 12),
+                  Container(width: 60, height: 16, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4))),
+                  const SizedBox(height: 8),
+                  Container(width: 100, height: 14, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4))),
+                  const SizedBox(height: 4),
+                  Container(width: 80, height: 12, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4))),
+                  const SizedBox(height: 15),
+                  Container(width: 70, height: 25, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4))),
+                ],
               ),
             ),
           ],

@@ -1,7 +1,5 @@
 import 'dart:io';
-
 import 'package:dio/dio.dart';
-
 import '../model/ProductsModel.dart';
 
 class ApiService {
@@ -44,19 +42,15 @@ class ApiService {
       if (e.type == DioExceptionType.connectionError) {
         throw const SocketException("No Internet Connection");
       }
-
       if (e.type == DioExceptionType.connectionTimeout) {
         throw Exception("Connection Timeout");
       }
-
       if (e.type == DioExceptionType.receiveTimeout) {
         throw Exception("Receive Timeout");
       }
-
       if (e.type == DioExceptionType.sendTimeout) {
         throw Exception("Send Timeout");
       }
-
       throw Exception(
         e.response?.data["message"] ??
             e.message ??

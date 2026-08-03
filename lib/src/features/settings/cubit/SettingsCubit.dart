@@ -1,4 +1,6 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../widget/NotificationSettingsManager.dart';
@@ -14,7 +16,11 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
     final notificationsEnabled = await NotificationSettingsManager.getNotificationsEnabled();
-    final isDarkMode = prefs.getBool(_themeKey) ?? true;
+    
+    // If user has never set a theme, use system theme
+    final bool? savedTheme = prefs.getBool(_themeKey);
+    final bool isDarkMode = savedTheme ?? 
+        (SchedulerBinding.instance.platformDispatcher.platformBrightness == Brightness.dark);
     
     emit(state.copyWith(
       notificationsEnabled: notificationsEnabled,
@@ -31,6 +37,15 @@ class SettingsCubit extends Cubit<SettingsState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_themeKey, value);
     emit(state.copyWith(isDarkMode: value));
+  }
+
+  // Update theme state when system settings change
+  void updateSystemTheme(Brightness brightness) async {
+    final prefs = await SharedPreferences.getInstance();
+    // Only auto-update if the user hasn't manually overridden it yet
+    if (!prefs.containsKey(_themeKey)) {
+      emit(state.copyWith(isDarkMode: brightness == Brightness.dark));
+    }
   }
 
   Future<void> reportBug(String description) async {

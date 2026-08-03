@@ -40,6 +40,7 @@ class _SignInScreenState extends State<SignInScreen> {
         final isDark = settingsState.isDarkMode;
         final themeColor = AppColors.instance.getTextPrimary(isDark);
         final bgColor = AppColors.instance.getBackground(isDark);
+        final containerColor = AppColors.instance.getCardBackground(isDark);
 
         return Scaffold(
           appBar: AppBar(
@@ -143,20 +144,20 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            "Log in to your account",
+                            "Log into your account",
                             style: GoogleFonts.workSans(
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
                               color: themeColor,
                             ),
                           ),
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 20),
                           Container(
                             padding: const EdgeInsets.all(16),
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: isDark ? AppColors.instance.white : AppColors.instance.black,
+                              borderRadius: BorderRadius.circular(20),
+                              color: containerColor,
                             ),
                             child: Column(
                               children: [
@@ -189,13 +190,13 @@ class _SignInScreenState extends State<SignInScreen> {
                                     child: Text(
                                       "Forgot Password?",
                                       style: GoogleFonts.workSans(
-                                        color: isDark ? AppColors.instance.black : AppColors.instance.white,
+                                        color: themeColor,
                                         fontSize: 16,
                                       ),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 20),
+                                const SizedBox(height: 10),
                                 state is AuthLoading
                                     ? const CupertinoActivityIndicator()
                                     : AppButton(
@@ -213,11 +214,11 @@ class _SignInScreenState extends State<SignInScreen> {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 25),
+                          const SizedBox(height: 15),
                           Text(
                             "Or continue with",
                             style: GoogleFonts.workSans(
-                              fontSize: 16,
+                              fontSize: 18,
                               color: AppColors.instance.gray,
                             ),
                           ),
@@ -244,11 +245,11 @@ class _SignInScreenState extends State<SignInScreen> {
                                   }
                                 },
                                 style: OutlinedButton.styleFrom(
-                                  backgroundColor: isDark ? AppColors.instance.white : AppColors.instance.black,
+                                  backgroundColor: containerColor,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadiusGeometry.circular(20),
+                                    borderRadius: BorderRadius.circular(20),
                                     side: BorderSide(
-                                      color: isDark ? AppColors.instance.white : AppColors.instance.black,
+                                      color: themeColor.withOpacity(0.1),
                                     ),
                                   ),
                                   fixedSize: const Size(150, 50),
@@ -258,13 +259,13 @@ class _SignInScreenState extends State<SignInScreen> {
                                     Icon(
                                       Icons.account_circle_outlined,
                                       size: 24,
-                                      color: isDark ? AppColors.instance.black : AppColors.instance.white,
+                                      color: themeColor,
                                     ),
                                     const SizedBox(width: 10),
                                     Text(
                                       "Google",
                                       style: GoogleFonts.workSans(
-                                        color: isDark ? AppColors.instance.black : AppColors.instance.white,
+                                        color: themeColor,
                                         fontSize: 14,
                                       ),
                                     ),
@@ -275,11 +276,11 @@ class _SignInScreenState extends State<SignInScreen> {
                               OutlinedButton(
                                 onPressed: () {},
                                 style: OutlinedButton.styleFrom(
-                                  backgroundColor: isDark ? AppColors.instance.white : AppColors.instance.black,
+                                  backgroundColor: containerColor,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadiusGeometry.circular(20),
+                                    borderRadius: BorderRadius.circular(20),
                                     side: BorderSide(
-                                      color: isDark ? AppColors.instance.white : AppColors.instance.black,
+                                      color: themeColor.withOpacity(0.1),
                                     ),
                                   ),
                                   fixedSize: const Size(150, 50),
@@ -289,13 +290,13 @@ class _SignInScreenState extends State<SignInScreen> {
                                     Icon(
                                       Icons.facebook,
                                       size: 24,
-                                      color: isDark ? AppColors.instance.black : AppColors.instance.white,
+                                      color: themeColor,
                                     ),
                                     const SizedBox(width: 10),
                                     Text(
                                       "Facebook",
                                       style: GoogleFonts.workSans(
-                                        color: isDark ? AppColors.instance.black : AppColors.instance.white,
+                                        color: themeColor,
                                         fontSize: 14,
                                       ),
                                     ),
@@ -316,7 +317,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 "Don't have an account?",
                                 style: GoogleFonts.workSans(
                                   color: AppColors.instance.gray,
-                                  fontSize: 16,
+                                  fontSize: 18,
                                 ),
                               ),
                             ),

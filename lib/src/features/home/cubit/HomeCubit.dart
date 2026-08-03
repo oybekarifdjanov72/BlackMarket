@@ -6,7 +6,7 @@ import '../../../core/service/ApiService.dart';
 import 'HomeState.dart';
 
 class HomeCubit extends Cubit<HomeState> {
-  HomeCubit() : super(HomeState());
+  HomeCubit() : super(const HomeState());
 
   int skip = 0;
   bool hasMore = true;
@@ -89,33 +89,45 @@ class HomeCubit extends Cubit<HomeState> {
         final productCategory = p.category.toLowerCase();
         final selectedCat = category.toLowerCase();
         
-        switch (selectedCat) {
-          case "beauty":
-            return productCategory == "beauty" || productCategory == "fragrances" || productCategory == "skin-care";
-          case "daily":
-            return productCategory == "groceries" || productCategory == "kitchen-accessories";
-          case "tech":
-            return productCategory == "smartphones" || 
-                   productCategory == "laptops" || 
-                   productCategory == "tablets" || 
-                   productCategory == "mobile-accessories";
-          case "fashion":
-            if (productCategory.contains("laptop") || productCategory.contains("phone")) return false;
-            
-            return productCategory.contains("shirt") || 
-                   productCategory.contains("shoes") || 
-                   productCategory.contains("bag") || 
-                   productCategory.contains("dress") || 
-                   productCategory.contains("tops") || 
-                   productCategory.contains("sunglasses") ||
-                   productCategory.contains("jewellery");
-          case "furniture":
-            return productCategory == "furniture" || productCategory == "home-decoration";
-          case "watches":
-            return productCategory.contains("watch");
-          default:
-            return productCategory == selectedCat;
+        if (selectedCat == "beauty") {
+          return productCategory == "beauty" || productCategory == "fragrances" || productCategory == "skin-care";
+        } 
+        
+        if (selectedCat == "daily") {
+          return productCategory == "groceries" || productCategory == "kitchen-accessories";
         }
+        
+        if (selectedCat == "tech") {
+          return productCategory == "smartphones" || 
+                 productCategory == "laptops" || 
+                 productCategory == "tablets" || 
+                 productCategory == "mobile-accessories";
+        }
+        
+        if (selectedCat == "fashion") {
+          if (productCategory.contains("laptop") ||
+              productCategory.contains("phone") || 
+              productCategory.contains("tablet") ||
+              productCategory.contains("accessories")) return false;
+          
+          return productCategory.contains("shirt") || 
+                 productCategory.contains("shoes") || 
+                 productCategory.contains("bag") || 
+                 productCategory.contains("dress") || 
+                 productCategory.contains("tops") || 
+                 productCategory.contains("sunglasses") ||
+                 productCategory.contains("jewellery");
+        }
+        
+        if (selectedCat == "furniture") {
+          return productCategory == "furniture" || productCategory == "home-decoration";
+        }
+        
+        if (selectedCat == "watches") {
+          return productCategory.contains("watch");
+        }
+        
+        return productCategory == selectedCat;
       }).toList();
     }
 

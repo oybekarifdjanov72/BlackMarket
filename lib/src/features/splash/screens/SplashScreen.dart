@@ -17,8 +17,14 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _navigateAfterDelay() async {
-    await Future.delayed(const Duration(seconds: 3));
-    AppRouter.pushReplacement(context, AppRoutes.signIn);
+    try {
+      await Future.delayed(const Duration(seconds: 3));
+      if (mounted) {
+        AppRouter.pushReplacement(context, AppRoutes.signIn);
+      }
+    } catch (e) {
+      debugPrint("Splash error: $e");
+    }
   }
 
   @override
@@ -31,13 +37,14 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             Image.asset(
               "assets/image/shopping_cart_logo.png",
-              height: MediaQuery.of(context).size.height * 0.4,
-              width: MediaQuery.of(context).size.width * 0.4,
+              height: MediaQuery.of(context).size.height * 0.5,
+              width: MediaQuery.of(context).size.width * 0.5,
             ),
             Lottie.asset(
-              "assets/lottie/Animation - 1745955536405.json",
-              height: MediaQuery.of(context).size.height * 0.6,
+              "assets/lottie/splash_animation.json",
+              height: MediaQuery.of(context).size.height * 0.5,
               width: MediaQuery.of(context).size.width * 0.7,
+              errorBuilder: (context, error, stackTrace) => const SizedBox(),
             ),
           ],
         ),

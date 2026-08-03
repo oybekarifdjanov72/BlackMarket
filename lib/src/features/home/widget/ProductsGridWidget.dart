@@ -1,9 +1,7 @@
-import 'package:black_market/src/core/widget/ShimmerWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import '../../../core/utils/consts/AppRouter.dart';
+import '../../../core/widget/ShimmerWidget.dart';
 import '../cubit/HomeCubit.dart';
 import '../cubit/HomeState.dart';
 import 'ProductCardWidget.dart';
@@ -22,34 +20,42 @@ class ProductGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
-        if (state.status == HomeStatus.loading) {
-          return buildGridShimmerSliver(isDark);
+        final products = state.filteredProducts;
+
+        // Use Shimmer while loading initial data
+        if (state.status == HomeStatus.loading && state.products.isEmpty) {
+          return SliverGrid(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 0.62,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => CardShimmer(isDark: isDark),
+              childCount: 6,
+            ),
+          );
         }
 
-        if (state.status == HomeStatus.error) {
+        if (state.status == HomeStatus.error && products.isEmpty) {
           return SliverFillRemaining(
-            hasScrollBody: false,
             child: Center(
               child: Text(
-                state.errorText ?? "Error",
-                style: GoogleFonts.workSans(color: themeColor),
+                state.errorText ?? "An error occurred",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: themeColor, fontSize: 16),
               ),
             ),
           );
         }
 
-        final products = state.filteredProducts;
-
-        if (products.isEmpty && state.status == HomeStatus.success) {
+        if (products.isEmpty && !state.isLoading) {
           return SliverFillRemaining(
-            hasScrollBody: false,
             child: Center(
               child: Text(
                 "No products found",
-                style: GoogleFonts.workSans(
-                  color: themeColor,
-                  fontSize: 18,
-                ),
+                style: TextStyle(color: themeColor, fontSize: 18),
               ),
             ),
           );
@@ -58,17 +64,13 @@ class ProductGrid extends StatelessWidget {
         return SliverGrid(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: 0.78,
+            childAspectRatio: 0.58,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
           ),
           delegate: SliverChildBuilderDelegate(
             (context, index) {
-              if (index == products.length) {
-                return const ShimmerWidget();
-              }
               final product = products[index];
-
               return ProductCard(
                 product: product,
                 onTap: () {
@@ -79,29 +81,14 @@ class ProductGrid extends StatelessWidget {
                   );
                 },
                 onAddToCart: () {
-                  AppRouter.push(context, AppRoutes.sellPage, arguments: product);
+                  // Handled inside ProductCard
                 },
               );
             },
-            childCount: products.length + (state.isLoading ? 1 : 0),
+            childCount: products.length,
           ),
         );
       },
     );
   }
-}
-
-Widget buildGridShimmerSliver(bool isDark) {
-  return SliverGrid(
-    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 2,
-      crossAxisSpacing: 16,
-      mainAxisSpacing: 16,
-      childAspectRatio: 0.78,
-    ),
-    delegate: SliverChildBuilderDelegate(
-      (context, index) => CardShimmer(isDark: isDark),
-      childCount: 6,
-    ),
-  );
 }

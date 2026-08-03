@@ -1,3 +1,6 @@
+import 'package:black_market/src/features/basket/screens/BasketScreen.dart';
+import 'package:black_market/src/features/basket/cubit/BasketCubit.dart';
+import 'package:black_market/src/features/basket/cubit/BasketState.dart';
 import 'package:black_market/src/features/favorites/screens/FavoritesScreen.dart';
 import 'package:black_market/src/features/settings/screens/SettingsScreen.dart';
 import 'package:black_market/src/features/settings/cubit/SettingsCubit.dart';
@@ -17,15 +20,34 @@ class BottomNavigationBarWidget extends StatefulWidget {
   State<BottomNavigationBarWidget> createState() => _BottomNavigationBarWidgetState();
 }
 
-class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
+class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> with WidgetsBindingObserver {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
     const HomeScreen(),
-    const _ComingSoon(title: 'Cart'),
+    const BasketScreen(),
     const FavoritePage(),
     const SettingsScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangePlatformBrightness() {
+    super.didChangePlatformBrightness();
+    final brightness = View.of(context).platformDispatcher.platformBrightness;
+    context.read<SettingsCubit>().updateSystemTheme(brightness);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +69,16 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildNavItem(CupertinoIcons.home, 0, themeColor),
-                _buildNavItem(CupertinoIcons.cart, 1, themeColor),
+                BlocBuilder<BasketCubit, BasketState>(
+                  builder: (context, basketState) {
+                    return _buildNavItem(
+                      CupertinoIcons.cart,
+                      1,
+                      themeColor,
+                      badgeCount: basketState.totalItems,
+                    );
+                  },
+                ),
                 _buildNavItem(CupertinoIcons.bookmark, 2, themeColor),
                 _buildNavItem(CupertinoIcons.settings, 3, themeColor),
               ],
@@ -58,7 +89,7 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
     );
   }
 
-  Widget _buildNavItem(IconData icon, int index, Color themeColor) {
+  Widget _buildNavItem(IconData icon, int index, Color themeColor, {int badgeCount = 0}) {
     final isSelected = _selectedIndex == index;
     return GestureDetector(
       onTap: () {
@@ -69,11 +100,41 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: 30,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.w100,
-            color: isSelected ? AppColors.instance.cyanAccent : themeColor,
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Icon(
+                icon,
+                size: 30,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.w100,
+                color: isSelected ? AppColors.instance.cyanAccent : themeColor,
+              ),
+              if (badgeCount > 0)
+                Positioned(
+                  right: -8,
+                  top: -8,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 18,
+                      minHeight: 18,
+                    ),
+                    child: Text(
+                      badgeCount.toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+            ],
           ),
           if (isSelected)
             Container(
@@ -87,36 +148,6 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
             ),
         ],
       ),
-    );
-  }
-}
-
-class _ComingSoon extends StatelessWidget {
-  final String title;
-  const _ComingSoon({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<SettingsCubit, SettingsState>(
-      builder: (context, state) {
-        final isDark = state.isDarkMode;
-        final themeColor = AppColors.instance.getTextPrimary(isDark);
-        final bgColor = AppColors.instance.getBackground(isDark);
-
-        return Scaffold(
-          backgroundColor: bgColor,
-          body: Center(
-            child: Text(
-              '$title Screen is coming soon!',
-              style: GoogleFonts.workSans(
-                fontWeight: FontWeight.bold, 
-                fontSize: 20, 
-                color: themeColor,
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 }

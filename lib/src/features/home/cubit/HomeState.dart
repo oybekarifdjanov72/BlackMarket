@@ -1,55 +1,65 @@
-import 'package:flutter/cupertino.dart';
-
+import 'package:equatable/equatable.dart';
 import '../../../core/model/ProductsModel.dart';
 
-class HomeState {
-  final String? errorText;
-  final bool isLoading;
+enum HomeStatus { initial, loading, success, error }
+
+class HomeState extends Equatable {
+  final HomeStatus status;
   final List<ProductModel> products;
   final List<ProductModel> filteredProducts;
+  final List<ProductModel> featuredProducts;
+  final String? errorText;
+  final bool isLoading;
   final String? searchQuery;
   final String selectedCategory;
-  final HomeStatus status;
   final bool showSuggestions;
-  final List<ProductModel> featuredProducts;
 
-  HomeState({
-    this.showSuggestions = false,
+  const HomeState({
     this.status = HomeStatus.initial,
-    this.errorText,
     this.products = const [],
     this.filteredProducts = const [],
-    this.searchQuery,
-    this.selectedCategory = "All",
-    this.isLoading = false,
     this.featuredProducts = const [],
+    this.errorText,
+    this.isLoading = false,
+    this.searchQuery = "",
+    this.selectedCategory = "All",
+    this.showSuggestions = false,
   });
 
   HomeState copyWith({
-    bool? showSuggestions,
-    String? errorText,
-    bool? isLoading,
+    HomeStatus? status,
     List<ProductModel>? products,
     List<ProductModel>? filteredProducts,
+    List<ProductModel>? featuredProducts,
+    String? errorText,
+    bool? isLoading,
     String? searchQuery,
     String? selectedCategory,
-    HomeStatus? status,
-    List<ProductModel>? featuredProducts,
+    bool? showSuggestions,
   }) {
     return HomeState(
-      showSuggestions: showSuggestions ?? this.showSuggestions,
-      errorText: errorText ?? this.errorText,
-      isLoading: isLoading ?? this.isLoading,
+      status: status ?? this.status,
       products: products ?? this.products,
       filteredProducts: filteredProducts ?? this.filteredProducts,
+      featuredProducts: featuredProducts ?? this.featuredProducts,
+      errorText: errorText ?? this.errorText,
+      isLoading: isLoading ?? this.isLoading,
       searchQuery: searchQuery ?? this.searchQuery,
       selectedCategory: selectedCategory ?? this.selectedCategory,
-      status: status ?? this.status,
-      featuredProducts: featuredProducts ?? this.featuredProducts,
+      showSuggestions: showSuggestions ?? this.showSuggestions,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        status,
+        products,
+        filteredProducts,
+        featuredProducts,
+        errorText,
+        isLoading,
+        searchQuery,
+        selectedCategory,
+        showSuggestions,
+      ];
 }
-
-enum HomeStatus { initial, loading, error, success }
-
-ValueNotifier<bool> noMoreData = ValueNotifier(false);

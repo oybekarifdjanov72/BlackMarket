@@ -25,7 +25,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final ScrollController scrollController = ScrollController();
   final SearchController searchController = SearchController();
-  final PageController pageController = PageController(viewportFraction: 0.9); // Edges visible logic
+  final PageController pageController = PageController(viewportFraction: 0.9);
   Timer? _timer;
 
   List<TextSpan> _highlightMatch(
@@ -89,6 +89,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
+    final homeCubit = context.read<HomeCubit>();
+    if (homeCubit.state.products.isEmpty) {
+      homeCubit.loadMore();
+    }
+
     scrollController.addListener(() {
       if (scrollController.position.pixels >=
           scrollController.position.maxScrollExtent - 200) {
@@ -102,15 +107,16 @@ class _HomeScreenState extends State<HomeScreen> {
   void _startAutoScroll() {
     _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
       if (pageController.hasClients) {
-        int nextPage = pageController.page!.toInt() + 1;
-        if (nextPage >= 3) {
-          nextPage = 0;
+        int nextPage = (pageController.page?.toInt() ?? 0) + 1;
+        final itemCount = context.read<HomeCubit>().state.featuredProducts.length;
+        if (itemCount > 0) {
+          if (nextPage >= itemCount) nextPage = 0;
+          pageController.animateToPage(
+            nextPage,
+            duration: const Duration(milliseconds: 800),
+            curve: Curves.easeInOutQuart,
+          );
         }
-        pageController.animateToPage(
-          nextPage,
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.easeInOut,
-        );
       }
     });
   }
@@ -134,43 +140,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
         return Scaffold(
           backgroundColor: bgColor,
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            backgroundColor: bgColor,
-            title: BlocBuilder<ProfileCubit, ProfileState>(
-              builder: (context, state) {
-                if (state.status == ProfileStatus.loading) {
-                  return const ShimmerWidget();
-                }
-
-                final displayName = state.user?.fullName ?? 'Guest';
-
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Hi, $displayName',
-                      style: GoogleFonts.workSans(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                        color: themeColor,
-                        shadows: [
-                          Shadow(
-                            color: Colors.white.withOpacity(0.9),
-                            blurRadius: 12,
-                            offset: const Offset(0, 0),
-                          ),
-                        ],
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
           body: TapRegion(
             onTapOutside: (_) {
               context.read<HomeCubit>().hideSearchSuggestions();
@@ -183,6 +152,49 @@ class _HomeScreenState extends State<HomeScreen> {
                     CustomScrollView(
                       controller: scrollController,
                       slivers: [
+                        SliverAppBar(
+                          floating: true,
+                          snap: true,
+                          backgroundColor: bgColor,
+                          elevation: 0,
+                          automaticallyImplyLeading: false,
+                          centerTitle: false,
+                          title: BlocBuilder<ProfileCubit, ProfileState>(
+                            builder: (context, state) {
+                              if (state.status == ProfileStatus.loading) {
+                                return const ShimmerWidget();
+                              }
+                              final displayName = state.user?.fullName ?? 'Guest';
+                              return Text(
+                                'Hi, $displayName',
+                                style: GoogleFonts.workSans(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22,
+                                  color: themeColor,
+                                  shadows: [
+                                    Shadow(
+                                      color: themeColor.withOpacity(0.8),
+                                      blurRadius: 15,
+                                      offset: const Offset(0, 0),
+                                    ),
+                                  ],
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              );
+                            },
+                          ),
+                          actions: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 16),
+                              child: Icon(
+                                CupertinoIcons.bell,
+                                size: 24,
+                                color: themeColor,
+                              ),
+                            ),
+                          ],
+                        ),
                         SliverToBoxAdapter(
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(16, 6, 16, 15),
@@ -229,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: themeColor,
                                   shadows: [
                                     Shadow(
-                                      color: Colors.white.withOpacity(0.9),
+                                      color: themeColor.withOpacity(0.5),
                                       blurRadius: 12,
                                     ),
                                   ],
@@ -278,7 +290,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       onSelected: (bool selected) {
                                         context.read<HomeCubit>().selectCategory(category);
                                       },
-                                      selectedColor: Colors.cyanAccent,
+                                      selectedColor: AppColors.instance.cyanAccent,
                                       backgroundColor: isDark ? AppColors.instance.shadeblack : Colors.grey[200],
                                       labelStyle: GoogleFonts.cabin(
                                         color: isSelected ? Colors.black : themeColor,
@@ -288,7 +300,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
                                         side: BorderSide(
-                                          color: isSelected ? Colors.cyanAccent : Colors.transparent,
+                                          color: isSelected ? AppColors.instance.cyanAccent : Colors.transparent,
                                         ),
                                       ),
                                     ),
@@ -301,7 +313,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         SliverToBoxAdapter(
                           child: Padding(
-                            padding: const EdgeInsets.fromLTRB(16, 15, 16, 10),
+                            padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
                             child: Text(
                               "Recommendations:",
                               style: GoogleFonts.workSans(
@@ -310,8 +322,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 color: themeColor,
                                 shadows: [
                                   Shadow(
-                                    color: Colors.white.withOpacity(0.9),
-                                    blurRadius: 12,
+                                    color: themeColor.withOpacity(0.8),
+                                    blurRadius: 15,
                                   ),
                                 ],
                               ),
@@ -321,7 +333,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         SliverToBoxAdapter(
                           child: state.featuredProducts.isNotEmpty
                               ? SizedBox(
-                                  height: 160,
+                                  height: 170,
                                   child: PageView.builder(
                                     controller: pageController,
                                     itemCount: state.featuredProducts.length,
@@ -341,7 +353,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 )
                               : SizedBox(
-                                  height: 160,
+                                  height: 170,
                                   child: PageView.builder(
                                     controller: PageController(viewportFraction: 0.9),
                                     itemCount: 3,
@@ -351,7 +363,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         SliverToBoxAdapter(
                           child: Padding(
-                            padding: const EdgeInsets.fromLTRB(16, 15, 16, 10),
+                            padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
                             child: Text(
                               "Best Sellers:",
                               style: GoogleFonts.workSans(
@@ -360,8 +372,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 color: themeColor,
                                 shadows: [
                                   Shadow(
-                                    color: Colors.white.withOpacity(0.9),
-                                    blurRadius: 12,
+                                    color: themeColor.withOpacity(0.8),
+                                    blurRadius: 15,
                                   ),
                                 ],
                               ),
@@ -377,13 +389,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
-
                     if (state.showSuggestions &&
                         state.filteredProducts.isNotEmpty)
                       Positioned(
                         left: 16,
                         right: 16,
-                        top: 75,
+                        top: 145,
                         child: Material(
                           elevation: 10,
                           borderRadius: BorderRadius.circular(12),

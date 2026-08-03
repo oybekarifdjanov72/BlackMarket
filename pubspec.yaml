@@ -1,6 +1,5 @@
 name: black_market
 description: "A new Flutter project."
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
 
@@ -23,7 +22,6 @@ dependencies:
   google_sign_in: ^7.2.0
   mask_text_input_formatter: ^2.9.0
   shimmer: ^3.0.0
-  google_mobile_ads: ^9.0.0
   lottie: ^3.5.1
   shared_preferences: ^2.5.5
   share_plus: ^13.2.1
@@ -33,12 +31,16 @@ dependencies:
   date_format: ^2.0.9
   file_picker: ^12.0.0-beta.1
   firebase_storage: ^13.4.5
+  url_launcher: ^6.3.2
+  dartz: ^0.10.1
+  get_it: ^9.2.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true

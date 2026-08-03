@@ -38,8 +38,7 @@ class ProductModel {
       description: json["description"] ?? "",
       category: json["category"] ?? "",
       price: (json["price"] ?? 0).toDouble(),
-      discountPercentage:
-      (json["discountPercentage"] ?? 0).toDouble(),
+      discountPercentage: (json["discountPercentage"] ?? 0).toDouble(),
       rating: (json["rating"] ?? 0).toDouble(),
       stock: json["stock"] ?? 0,
       brand: json["brand"] ?? "",
@@ -92,8 +91,7 @@ class ProductModel {
       description: description ?? this.description,
       category: category ?? this.category,
       price: price ?? this.price,
-      discountPercentage:
-      discountPercentage ?? this.discountPercentage,
+      discountPercentage: discountPercentage ?? this.discountPercentage,
       rating: rating ?? this.rating,
       stock: stock ?? this.stock,
       brand: brand ?? this.brand,

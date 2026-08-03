@@ -4,6 +4,7 @@ import 'package:black_market/src/features/settings/cubit/SettingsState.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:toastification/toastification.dart';
 import '../../../core/model/ProductsModel.dart';
 import '../../../core/utils/consts/AppColors.dart';
 import '../../../core/widget/CustomAppButton.dart';
@@ -99,21 +100,20 @@ class _FavoriteCard extends StatelessWidget {
       direction: DismissDirection.endToStart,
       onDismissed: (_) {
         context.read<FavoriteCubit>().toggleFavorite(product);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${product.title} removed")));
+        toastification.show(type: ToastificationType.info, title: Text("${product.title} was removed", style: GoogleFonts.workSans(fontSize: 18, fontWeight: FontWeight.bold),));
       },
       background: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
         decoration: BoxDecoration(
           color: Colors.red,
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(16),
         ),
         child: Icon(Icons.delete, color: AppColors.instance.white),
       ),
       child: Card(
         color: cardColor,
         elevation: 3,
-        margin: const EdgeInsets.only(bottom: 14),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         child: InkWell(
           borderRadius: BorderRadius.circular(18),
@@ -123,6 +123,7 @@ class _FavoriteCard extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Hero(
                   tag: product.id,
@@ -130,75 +131,65 @@ class _FavoriteCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network(
                       product.thumbnail,
-                      width: 90,
-                      height: 90,
-                      fit: BoxFit.cover,
+                      width: 120,
+                      height: 120,
+                      fit: BoxFit.contain,
                     ),
                   ),
                 ),
                 const SizedBox(width: 15),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        product.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.workSans(
-                          color: themeColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        product.brand,
-                        style: GoogleFonts.workSans(
-                          color: themeColorSecondary,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          const Icon(Icons.star, color: Colors.amber, size: 18),
-                          const SizedBox(width: 5),
-                          Text(
-                            product.rating.toString(),
-                            style: GoogleFonts.workSans(
-                              color: themeColor,
-                            ),
+                  child: SizedBox(
+                    height: 150,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          product.title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.workSans(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: themeColor,
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        "\$${product.price}",
-                        style: GoogleFonts.workSans(
-                          color: Colors.red,
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                          shadows: [
-                            const Shadow(
-                              blurRadius: 5.0,
-                              color: Colors.redAccent,
-                              offset: Offset(0, 0),
+                        ),
+
+                        const SizedBox(height: 4),
+
+                        Text(
+                          product.brand,
+                          style: GoogleFonts.workSans(
+                            color: themeColorSecondary,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Row(
+                          children: [
+                            const Icon(Icons.star,
+                                color: Colors.amber,
+                                size: 18),
+                            const SizedBox(width: 5),
+                            Text(
+                              product.rating.toString(),
+                              style: GoogleFonts.workSans(
+                                color: themeColor,
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                Column(
-                  children: [
-                    AppButton(
-                      onTap: () {
-                        AppRouter.push(context, AppRoutes.sellPage, arguments: product);
-                      },
-                      text: "Purchase",
+                        const Spacer(),
+                        Text(
+                          "\$${product.price}",
+                          style: GoogleFonts.workSans(
+                            color: Colors.red,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),
