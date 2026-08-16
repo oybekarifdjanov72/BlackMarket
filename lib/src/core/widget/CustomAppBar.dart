@@ -1,8 +1,7 @@
-import 'package:black_market/src/core/utils/consts/AppRouter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../utils/consts/AppColors.dart';
+import '../consts/AppColors.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar(

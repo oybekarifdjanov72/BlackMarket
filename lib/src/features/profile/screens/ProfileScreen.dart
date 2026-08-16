@@ -7,9 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:black_market/src/core/utils/responsive/AppResponsive.dart';
 
-import '../../../core/utils/consts/AppColors.dart';
-import '../../../core/utils/consts/AppRouter.dart';
+import '../../../core/consts/AppColors.dart';
+import '../../../core/consts/AppRouter.dart';
 import '../../settings/widget/SettingsItem.dart';
 import '../cubit/ProfileCubit.dart';
 import '../cubit/ProfileState.dart';
@@ -78,6 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final r = AppResponsive.of(context);
     final currentUser = FirebaseAuth.instance.currentUser;
 
     return MultiBlocListener(
@@ -115,164 +117,170 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 final localPath = state.localImagePath;
 
                 return SingleChildScrollView(
-                  child: SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Center(
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                InkWell(
-                                  borderRadius: BorderRadius.circular(20),
-                                  splashColor: AppColors.instance.gray.withOpacity(0.3),
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: Icon(
-                                      Icons.chevron_left,
-                                      size: 45,
-                                      color: themeColor,
-                                    ),
+                  child: ResponsivePage(
+                    child: Center(
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              InkWell(
+                                borderRadius: BorderRadius.circular(20),
+                                splashColor: AppColors.instance.gray.withOpacity(0.3),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Icon(
+                                    Icons.chevron_left,
+                                    size: r.value(mobile: 45, smallMobile: 35),
+                                    color: themeColor,
                                   ),
                                 ),
-                                const Spacer(),
-                                RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: 'Your ',
-                                        style: GoogleFonts.workSans(
-                                          fontSize: 26,
-                                          fontWeight: FontWeight.bold,
-                                          color: themeColor,
-                                          shadows: [
-                                            Shadow(
-                                              blurRadius: 10.0,
-                                              color: themeColor.withOpacity(0.8),
-                                              offset: const Offset(0, 0),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: 'Profile',
-                                        style: GoogleFonts.workSans(
-                                          fontSize: 26,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.instance.cyanAccent,
-                                          shadows: [
-                                            Shadow(
-                                              blurRadius: 10.0,
-                                              color: AppColors.instance.cyanAccent.withOpacity(0.8),
-                                              offset: const Offset(0, 0),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const Spacer(),
-                                const SizedBox(width: 45), 
-                              ],
-                            ),
-                            const SizedBox(height: 30),
-                            GestureDetector(
-                              onTap: () => context.read<ProfileCubit>().pickAndUploadImage(),
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  CircleAvatar(
-                                    key: ValueKey(localPath ?? photoUrl), 
-                                    radius: 70,
-                                    backgroundColor: isDark ? AppColors.instance.white : AppColors.instance.black,
-                                    backgroundImage: localPath != null 
-                                        ? FileImage(File(localPath)) as ImageProvider
-                                        : (photoUrl != null ? NetworkImage(photoUrl) : null),
-                                    child: (photoUrl == null && localPath == null)
-                                        ? Icon(CupertinoIcons.person, size: 50, color: isDark ? AppColors.instance.black : AppColors.instance.white)
-                                        : null,
-                                  ),
-                                  if (state.status == ProfileStatus.loading)
-                                    SizedBox(
-                                      width: 140,
-                                      height: 140,
-                                      child: CircularProgressIndicator(color: AppColors.instance.cyanAccent, strokeWidth: 3),
-                                    ),
-                                  Positioned(
-                                    bottom: 5,
-                                    right: 5,
-                                    child: CircleAvatar(
-                                      radius: 22,
-                                      backgroundColor: AppColors.instance.cyanAccent,
-                                      child: Icon(Icons.camera_alt, size: 22, color: AppColors.instance.black),
-                                    ),
-                                  ),
-                                ],
                               ),
-                            ),
-                            const SizedBox(height: 20),
-                            isEditing
-                                ? TextField(
-                              controller: nameController,
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.workSans(
-                                fontSize: 28,
-                                color: themeColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              decoration: InputDecoration(
-                                hintText: "Enter your name",
-                                hintStyle: GoogleFonts.workSans(color: themeColorSecondary),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: themeColor.withOpacity(0.38)),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: themeColor),
-                                ),
-                              ),
-                            )
-                                : Text(
-                              fullName,
-                              style: GoogleFonts.workSans(
-                                fontSize: 30,
-                                color: themeColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(
-                              email,
-                              style: GoogleFonts.workSans(
-                                fontSize: 18,
-                                color: themeColorSecondary,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            if (currentUser?.emailVerified ?? false)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
+                              const Spacer(),
+                              RichText(
+                                text: TextSpan(
                                   children: [
-                                    Icon(Icons.verified, size: 20, color: AppColors.instance.greenAccent),
-                                    const SizedBox(width: 6),
-                                    Text(
-                                      "Verified Account",
+                                    TextSpan(
+                                      text: 'Your ',
                                       style: GoogleFonts.workSans(
-                                        color: AppColors.instance.greenAccent, 
-                                        fontSize: 14,
+                                        fontSize: r.titleSize(26),
                                         fontWeight: FontWeight.bold,
+                                        color: themeColor,
+                                        shadows: [
+                                          Shadow(
+                                            blurRadius: 10.0,
+                                            color: themeColor.withOpacity(0.8),
+                                            offset: const Offset(0, 0),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: 'Profile',
+                                      style: GoogleFonts.workSans(
+                                        fontSize: r.titleSize(26),
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.instance.cyanAccent,
+                                        shadows: [
+                                          Shadow(
+                                            blurRadius: 10.0,
+                                            color: AppColors.instance.cyanAccent.withOpacity(0.8),
+                                            offset: const Offset(0, 0),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                            const SizedBox(height: 35),
-                            Row(
+                              const Spacer(),
+                              SizedBox(width: r.value(mobile: 45, smallMobile: 35)), 
+                            ],
+                          ),
+                          SizedBox(height: r.isSmallMobile ? 10 : 15),
+                          GestureDetector(
+                            onTap: () => context.read<ProfileCubit>().pickAndUploadImage(),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                CircleAvatar(
+                                  key: ValueKey(localPath ?? photoUrl), 
+                                  radius: r.value(mobile: 65, smallMobile: 50),
+                                  backgroundColor: isDark ? AppColors.instance.white : AppColors.instance.black,
+                                  backgroundImage: localPath != null 
+                                      ? FileImage(File(localPath)) as ImageProvider
+                                      : (photoUrl != null ? NetworkImage(photoUrl) : null),
+                                  child: (photoUrl == null && localPath == null)
+                                      ? Icon(CupertinoIcons.person, size: r.value(mobile: 45, smallMobile: 32), color: isDark ? AppColors.instance.black : AppColors.instance.white)
+                                      : null,
+                                ),
+                                if (state.status == ProfileStatus.loading)
+                                  SizedBox(
+                                    width: r.value(mobile: 130, smallMobile: 100),
+                                    height: r.value(mobile: 130, smallMobile: 100),
+                                    child: CircularProgressIndicator(color: AppColors.instance.cyanAccent, strokeWidth: 3),
+                                  ),
+                                Positioned(
+                                  bottom: 5,
+                                  right: 5,
+                                  child: CircleAvatar(
+                                    radius: r.value(mobile: 20, smallMobile: 16),
+                                    backgroundColor: AppColors.instance.cyanAccent,
+                                    child: Icon(Icons.camera_alt, size: r.value(mobile: 20, smallMobile: 16), color: AppColors.instance.black),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 15),
+                          isEditing
+                              ? TextField(
+                            controller: nameController,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.workSans(
+                              fontSize: r.titleSize(28),
+                              color: themeColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            decoration: InputDecoration(
+                              hintText: "Enter your name",
+                              hintStyle: GoogleFonts.workSans(color: themeColorSecondary),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: themeColor.withOpacity(0.38)),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: themeColor),
+                              ),
+                            ),
+                          )
+                              : Text(
+                            fullName,
+                            style: GoogleFonts.workSans(
+                              fontSize: r.titleSize(28),
+                              color: themeColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            email,
+                            style: GoogleFonts.workSans(
+                              fontSize: r.bodySize(16),
+                              color: themeColorSecondary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          if (currentUser?.emailVerified ?? false)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.verified, size: 18, color: AppColors.instance.greenAccent),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    "Verified Account",
+                                    style: GoogleFonts.workSans(
+                                      color: AppColors.instance.greenAccent, 
+                                      fontSize: r.bodySize(13),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          SizedBox(height: r.sectionGap * 3),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: r.value(
+                                mobile: 20,
+                                smallMobile: 14,
+                                tablet: 28,
+                              ),
+                            ),
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Expanded(
@@ -293,28 +301,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: bgColor,
                                       padding: const EdgeInsets.symmetric(
-                                        horizontal: 25,
-                                        vertical: 15,
+                                        horizontal: 10,
+                                        vertical: 12,
                                       ),
                                       side: BorderSide(color: themeColor, width: 2),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
                                       ),
-                                      minimumSize: const Size(160, 55),
+                                      minimumSize: Size(0, r.value(mobile: 60, smallMobile: 55)), // Increased height, width is handled by Expanded
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Icon(
                                           isEditing ? Icons.save_alt_outlined : Icons.mode_edit_outline_outlined,
-                                          size: 24,
+                                          size: r.value(mobile: 24, smallMobile: 18),
                                           color: themeColor,
                                         ),
-                                        const SizedBox(width: 10),
+                                        const SizedBox(width: 8),
                                         Text(
                                           isEditing ? "Save" : "Edit",
                                           style: GoogleFonts.workSans(
-                                            fontSize: 18,
+                                            fontSize: r.bodySize(18),
                                             color: themeColor,
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -333,24 +341,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: bgColor,
                                       padding: const EdgeInsets.symmetric(
-                                        horizontal: 25,
-                                        vertical: 15,
+                                        horizontal: 10,
+                                        vertical: 12,
                                       ),
                                       side: BorderSide(color: themeColor, width: 2),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
                                       ),
-                                      minimumSize: const Size(160, 55),
+                                      minimumSize: Size(0, r.value(mobile: 60, smallMobile: 55)), // Increased height
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Icon(Icons.share, size: 24, color: themeColor),
-                                        const SizedBox(width: 10),
+                                        Icon(Icons.share, size: r.value(mobile: 24, smallMobile: 18), color: themeColor),
+                                        const SizedBox(width: 8),
                                         Text(
                                           "Share",
                                           style: GoogleFonts.workSans(
-                                            fontSize: 18,
+                                            fontSize: r.bodySize(18),
                                             color: themeColor,
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -361,61 +369,78 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 40),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Opportunities",
-                                style: GoogleFonts.workSans(
-                                  fontSize: 24,
-                                  color: themeColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                          ),
+                          SizedBox(height: r.sectionGap * 3),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: r.value(
+                                mobile: 16,
+                                smallMobile: 12,
+                                tablet: 24,
                               ),
                             ),
-                            const SizedBox(height: 25),
-                            SettingsItem(
-                              text: "Purchase History",
-                              icon: Icons.history_outlined,
-                              onTap: () {
-                                AppRouter.push(context, AppRoutes.purchaseHistory);
-                              },
-                            ),
-                            const SizedBox(height: 15),
-                            SettingsItem(
-                              text: "Update Service",
-                              icon: Icons.browser_updated_outlined,
-                              onTap: () {
-                                context.read<ProfileCubit>().getProfile();
-                              },
-                            ),
-                            const SizedBox(height: 40),
-                            if (currentUser != null) ...[
-                              Text(
-                                "Last Sign In: ${currentUser.metadata.lastSignInTime?.toLocal().toString().split('.')[0] ?? 'Unknown'}",
-                                style: GoogleFonts.workSans(
-                                  color: themeColorSecondary, 
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
+                            child: Column(
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "Opportunities",
+                                    style: GoogleFonts.workSans(
+                                      fontSize: r.titleSize(22),
+                                      color: themeColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 15),
-                            ],
-                            TextButton.icon(
-                              onPressed: () => _showLogoutDialog(context, themeColor, bgColor),
-                              icon: Icon(Icons.logout, color: AppColors.instance.red, size: 30),
-                              label: Text(
-                                'LOG OUT',
-                                style: GoogleFonts.workSans(
-                                  color: AppColors.instance.red, 
-                                  fontSize: 26, 
-                                  fontWeight: FontWeight.bold,
+
+                                const SizedBox(height: 15),
+
+                                SettingsItem(
+                                  text: "Purchase History",
+                                  icon: Icons.history_outlined,
+                                  onTap: () {
+                                    AppRouter.push(context, AppRoutes.purchaseHistory);
+                                  },
                                 ),
+
+                                const SizedBox(height: 10),
+
+                                SettingsItem(
+                                  text: "Update Service",
+                                  icon: Icons.browser_updated_outlined,
+                                  onTap: () {
+                                    context.read<ProfileCubit>().getProfile();
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: r.sectionGap * 3),
+                          if (currentUser != null) ...[
+                            Text(
+                              "Last Sign In: ${currentUser.metadata.lastSignInTime?.toLocal().toString().split('.')[0] ?? 'Unknown'}",
+                              style: GoogleFonts.workSans(
+                                color: themeColorSecondary, 
+                                fontSize: r.bodySize(13),
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 10),
                           ],
-                        ),
+                          TextButton.icon(
+                            onPressed: () => _showLogoutDialog(context, themeColor, bgColor),
+                            icon: Icon(Icons.logout, color: AppColors.instance.red, size: r.isSmallMobile ? 22 : 26),
+                            label: Text(
+                              'LOG OUT',
+                              style: GoogleFonts.workSans(
+                                color: AppColors.instance.red, 
+                                fontSize: r.titleSize(24),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
                       ),
                     ),
                   ),

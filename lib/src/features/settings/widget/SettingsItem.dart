@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../core/utils/consts/AppColors.dart';
+import 'package:black_market/src/core/utils/responsive/AppResponsive.dart';
+import '../../../core/consts/AppColors.dart';
 import '../cubit/SettingsCubit.dart';
 import '../cubit/SettingsState.dart';
 
@@ -19,6 +20,7 @@ class SettingsItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final r = AppResponsive.of(context);
     return BlocBuilder<SettingsCubit, SettingsState>(
       builder: (context, state) {
         final isDark = state.isDarkMode;
@@ -26,19 +28,19 @@ class SettingsItem extends StatelessWidget {
 
         return ListTile(
           contentPadding: EdgeInsets.zero,
-          leading: Icon(icon, color: themeColor, size: 35),
+          leading: Icon(icon, color: themeColor, size: r.value(mobile: 35, smallMobile: 30)),
           title: Text(
             text,
             style: GoogleFonts.workSans(
               color: themeColor,
-              fontSize: 22,
+              fontSize: r.bodySize(22),
               fontWeight: FontWeight.bold,
             ),
           ),
           trailing: Icon(
             Icons.arrow_forward_ios, 
             color: themeColor,
-            size: 20,
+            size: r.value(mobile: 20, smallMobile: 18),
           ),
           onTap: onTap,
         );

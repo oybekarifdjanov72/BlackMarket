@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../core/utils/consts/AppColors.dart';
+import '../../../core/consts/AppColors.dart';
 import '../../settings/cubit/SettingsCubit.dart';
 import '../../settings/cubit/SettingsState.dart';
 
@@ -9,7 +9,7 @@ class AboutAppPage extends StatefulWidget {
   const AboutAppPage({super.key});
 
   @override
-  _AboutAppPageState createState() => _AboutAppPageState();
+  State<AboutAppPage> createState() => _AboutAppPageState();
 }
 
 class _AboutAppPageState extends State<AboutAppPage> {

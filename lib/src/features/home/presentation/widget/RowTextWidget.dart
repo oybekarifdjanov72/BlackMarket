@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../core/utils/consts/AppColors.dart';
+import 'package:black_market/src/core/consts/AppColors.dart';
 
 Widget buildInfoRow(IconData icon, String label, String value, Color themeColor, bool isDark) {
   return Padding(

@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BugReportPage extends StatefulWidget {
   const BugReportPage({super.key});
 
   @override
-  _BugReportPageState createState() => _BugReportPageState();
+  State<BugReportPage> createState() => _BugReportPageState();
 }
 
 class _BugReportPageState extends State<BugReportPage> {

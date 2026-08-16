@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../utils/consts/AppColors.dart';
+import '../consts/AppColors.dart';
 
 class CustomTextField extends StatefulWidget {
   const CustomTextField({

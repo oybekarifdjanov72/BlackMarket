@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../utils/consts/AppColors.dart';
+import '../consts/AppColors.dart';
 
 class AppButton extends StatelessWidget {
   const AppButton({super.key, required this.onTap, required this.text});

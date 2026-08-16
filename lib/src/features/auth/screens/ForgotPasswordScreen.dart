@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:toastification/toastification.dart';
-import '../../../core/utils/consts/AppColors.dart';
+import '../../../core/consts/AppColors.dart';
 import '../../../core/validators/AppValidators.dart';
 import '../../../core/widget/CustomAppButton.dart';
-import '../../../core/widget/CustomTextFormField.dart';
+import '../../../core/widget/CustomTextFormFIeld.dart';
 import '../cubit/AuthCubit.dart';
 import '../cubit/AuthState.dart';
 

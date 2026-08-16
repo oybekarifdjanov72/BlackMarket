@@ -1,17 +1,18 @@
 import 'dart:async';
-import 'package:black_market/src/features/home/widget/FeaturedProductCard.dart';
-import 'package:black_market/src/features/home/widget/ProductsGridWidget.dart';
+import 'package:black_market/src/features/home/presentation/widget/FeaturedProductCard.dart';
+import 'package:black_market/src/features/home/presentation/widget/ProductsGridWidget.dart';
 import 'package:black_market/src/features/settings/cubit/SettingsCubit.dart';
 import 'package:black_market/src/features/settings/cubit/SettingsState.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../core/utils/consts/AppColors.dart';
-import '../../../core/utils/consts/AppRouter.dart';
-import '../../../core/widget/ShimmerWidget.dart';
-import '../../profile/cubit/ProfileCubit.dart';
-import '../../profile/cubit/ProfileState.dart';
+import 'package:black_market/src/core/utils/responsive/AppResponsive.dart';
+import 'package:black_market/src/core/consts/AppColors.dart';
+import 'package:black_market/src/core/consts/AppRouter.dart';
+import 'package:black_market/src/core/widget/ShimmerWidget.dart';
+import 'package:black_market/src/features/profile/cubit/ProfileCubit.dart';
+import 'package:black_market/src/features/profile/cubit/ProfileState.dart';
 import '../cubit/HomeCubit.dart';
 import '../cubit/HomeState.dart';
 
@@ -25,7 +26,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final ScrollController scrollController = ScrollController();
   final SearchController searchController = SearchController();
-  final PageController pageController = PageController(viewportFraction: 0.9);
+  final PageController pageController = PageController(viewportFraction: 0.85);
   Timer? _timer;
 
   List<TextSpan> _highlightMatch(
@@ -137,6 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
         final isDark = settingsState.isDarkMode;
         final themeColor = AppColors.instance.getTextPrimary(isDark);
         final bgColor = AppColors.instance.getBackground(isDark);
+        final r = AppResponsive.of(context);
 
         return Scaffold(
           backgroundColor: bgColor,
@@ -149,9 +151,13 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, state) {
                 return Stack(
                   children: [
-                    CustomScrollView(
-                      controller: scrollController,
-                      slivers: [
+                    RefreshIndicator(
+                      color: AppColors.instance.cyanAccent,
+                      onRefresh: () => context.read<HomeCubit>().refresh(),
+                      child: CustomScrollView(
+                        controller: scrollController,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        slivers: [
                         SliverAppBar(
                           floating: true,
                           snap: true,
@@ -169,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 'Hi, $displayName',
                                 style: GoogleFonts.workSans(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 22,
+                                  fontSize: r.titleSize(22),
                                   color: themeColor,
                                   shadows: [
                                     Shadow(
@@ -197,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         SliverToBoxAdapter(
                           child: Padding(
-                            padding: const EdgeInsets.fromLTRB(16, 6, 16, 15),
+                            padding: EdgeInsets.fromLTRB(r.pagePadding.left, 6, r.pagePadding.right, 15),
                             child: TextField(
                               controller: searchController,
                               onChanged: (value) {
@@ -264,53 +270,88 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                        SliverToBoxAdapter(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                const SizedBox(width: 12),
-                                ...[
-                                  'All',
-                                  'Beauty',
-                                  'Daily',
-                                  'Fashion',
-                                  'Tech',
-                                  'Furniture',
-                                  'Watches',
-                                ].map((category) {
-                                  final isSelected = state.selectedCategory == category;
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 6.0,
-                                    ),
-                                    child: ChoiceChip(
-                                      label: Text(category),
-                                      selected: isSelected,
-                                      onSelected: (bool selected) {
-                                        context.read<HomeCubit>().selectCategory(category);
-                                      },
-                                      selectedColor: AppColors.instance.cyanAccent,
-                                      backgroundColor: isDark ? AppColors.instance.shadeblack : Colors.grey[200],
-                                      labelStyle: GoogleFonts.cabin(
-                                        color: isSelected ? Colors.black : themeColor,
-                                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          SliverToBoxAdapter(
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: r.isTablet ? 24 : 12,
+                                  ),
+
+                                  ...[
+                                    'All',
+                                    'Beauty',
+                                    'Daily',
+                                    'Fashion',
+                                    'Tech',
+                                    'Furniture',
+                                    'Watches',
+                                  ].map((category) {
+                                    final isSelected =
+                                        state.selectedCategory == category;
+
+                                    return Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: r.isTablet ? 8 : 6,
                                       ),
-                                      showCheckmark: false,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                        side: BorderSide(
-                                          color: isSelected ? AppColors.instance.cyanAccent : Colors.transparent,
+                                      child: ChoiceChip(
+                                        label: Text(
+                                          category,
+                                          style: GoogleFonts.cabin(
+                                            fontSize: r.isTablet ? 16 : 14,
+                                            color: isSelected
+                                                ? Colors.black
+                                                : themeColor,
+                                            fontWeight: isSelected
+                                                ? FontWeight.bold
+                                                : FontWeight.normal,
+                                          ),
+                                        ),
+
+                                        selected: isSelected,
+
+                                        onSelected: (_) {
+                                          context
+                                              .read<HomeCubit>()
+                                              .selectCategory(category);
+                                        },
+
+                                        selectedColor:
+                                        AppColors.instance.cyanAccent,
+
+                                        backgroundColor: isDark
+                                            ? AppColors.instance.shadeblack
+                                            : Colors.grey[200],
+
+                                        showCheckmark: false,
+
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: r.isTablet ? 14 : 12,
+                                          vertical: r.isTablet ? 16 : 13,
+                                        ),
+
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            r.isTablet ? 20 : 16,
+                                          ),
+                                          side: BorderSide(
+                                            color: isSelected
+                                                ? AppColors.instance.cyanAccent
+                                                : Colors.transparent,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                }).toList(),
-                                const SizedBox(width: 16),
-                              ],
+                                    );
+                                  }),
+
+                                  SizedBox(
+                                    width: r.isTablet ? 24 : 16,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
                         SliverToBoxAdapter(
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
@@ -333,7 +374,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         SliverToBoxAdapter(
                           child: state.featuredProducts.isNotEmpty
                               ? SizedBox(
-                                  height: 170,
+                            width: double.infinity,
+                                  height: r.featuredCarouselHeight,
                                   child: PageView.builder(
                                     controller: pageController,
                                     itemCount: state.featuredProducts.length,
@@ -353,7 +395,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 )
                               : SizedBox(
-                                  height: 170,
+                                  height: r.featuredCarouselHeight,
                                   child: PageView.builder(
                                     controller: PageController(viewportFraction: 0.9),
                                     itemCount: 3,
@@ -381,7 +423,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         SliverPadding(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                          padding: EdgeInsets.fromLTRB(r.pagePadding.left, 0, r.pagePadding.right, 0),
                           sliver: ProductGrid(
                             isDark: isDark,
                             themeColor: themeColor,
@@ -389,12 +431,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
+                    ),
                     if (state.showSuggestions &&
                         state.filteredProducts.isNotEmpty)
                       Positioned(
                         left: 16,
                         right: 16,
-                        top: 145,
+                        top: 155,
                         child: Material(
                           elevation: 10,
                           borderRadius: BorderRadius.circular(12),

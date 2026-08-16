@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../core/utils/consts/AppColors.dart';
+import '../../../core/consts/AppColors.dart';
 import '../../settings/cubit/SettingsCubit.dart';
 import '../../settings/cubit/SettingsState.dart';
 import '../cubit/LocationCubit.dart';

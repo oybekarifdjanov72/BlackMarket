@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../../core/model/ProductsModel.dart';
+import 'package:black_market/src/features/home/data/model/ProductsModel.dart';
 
 enum HomeStatus { initial, loading, success, error }
 
@@ -32,6 +32,7 @@ class HomeState extends Equatable {
     List<ProductModel>? filteredProducts,
     List<ProductModel>? featuredProducts,
     String? errorText,
+    bool clearError = false,
     bool? isLoading,
     String? searchQuery,
     String? selectedCategory,
@@ -42,7 +43,7 @@ class HomeState extends Equatable {
       products: products ?? this.products,
       filteredProducts: filteredProducts ?? this.filteredProducts,
       featuredProducts: featuredProducts ?? this.featuredProducts,
-      errorText: errorText ?? this.errorText,
+      errorText: clearError ? null : (errorText ?? this.errorText),
       isLoading: isLoading ?? this.isLoading,
       searchQuery: searchQuery ?? this.searchQuery,
       selectedCategory: selectedCategory ?? this.selectedCategory,

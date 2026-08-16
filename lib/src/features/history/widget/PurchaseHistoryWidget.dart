@@ -1,12 +1,12 @@
 import 'package:black_market/src/core/model/ProductsModel.dart';
-import 'package:black_market/src/core/utils/consts/AppRouter.dart';
+import 'package:black_market/src/core/consts/AppRouter.dart';
 import 'package:black_market/src/features/settings/cubit/SettingsCubit.dart';
 import 'package:black_market/src/features/settings/cubit/SettingsState.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../core/utils/consts/AppColors.dart';
+import '../../../core/consts/AppColors.dart';
 
 class ItemCard extends StatefulWidget {
   final ProductModel item;

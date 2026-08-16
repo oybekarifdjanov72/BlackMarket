@@ -1,16 +1,17 @@
-import 'package:black_market/src/core/utils/consts/AppColors.dart';
+import 'package:black_market/src/core/consts/AppColors.dart';
 import 'package:black_market/src/core/model/ProductsModel.dart';
 import 'package:black_market/src/features/settings/cubit/SettingsCubit.dart';
 import 'package:black_market/src/features/settings/cubit/SettingsState.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:black_market/src/core/utils/responsive/AppResponsive.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toastification/toastification.dart';
-import '../../../core/utils/consts/AppRouter.dart';
-import '../../basket/cubit/BasketCubit.dart';
-import '../../favorites/cubit/FavoritesCubit.dart';
-import '../../favorites/cubit/FavoritesState.dart';
+import 'package:black_market/src/core/consts/AppRouter.dart';
+import 'package:black_market/src/features/basket/cubit/BasketCubit.dart';
+import 'package:black_market/src/features/favorites/cubit/FavoritesCubit.dart';
+import 'package:black_market/src/features/favorites/cubit/FavoritesState.dart';
 import '../widget/QuantityWidget.dart';
 import '../widget/RowTextWidget.dart';
 
@@ -43,7 +44,7 @@ class _SellPageState extends State<SellPage> {
             child: Column(
               children: [
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.55,
+                  height: AppResponsive.of(context).value(mobile: MediaQuery.of(context).size.height * 0.48, smallMobile: MediaQuery.of(context).size.height * 0.42, tablet: MediaQuery.of(context).size.height * 0.45),
                   width: double.infinity,
                   child: Stack(
                     children: [
@@ -135,19 +136,38 @@ class _SellPageState extends State<SellPage> {
                               ],
                             ),
                           ),
-                          Row(
-                            children: [
-                              const Icon(Icons.star, color: Colors.amber, size: 24),
-                              const SizedBox(width: 5),
-                              Text(
-                                model.rating.toStringAsFixed(1),
-                                style: GoogleFonts.workSans(
-                                  color: themeColor,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.amber.withOpacity(0.18),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Colors.amber.withOpacity(0.35),
+                                width: 1,
                               ),
-                            ],
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.star_rounded,
+                                  color: Colors.amber,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  model.rating.toString(),
+                                  style: GoogleFonts.workSans(
+                                    color: themeColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
