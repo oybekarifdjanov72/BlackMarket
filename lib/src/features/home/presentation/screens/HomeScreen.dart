@@ -14,6 +14,7 @@ import 'package:black_market/src/core/consts/AppRouter.dart';
 import 'package:black_market/src/core/widget/ShimmerWidget.dart';
 import 'package:black_market/src/features/profile/cubit/ProfileCubit.dart';
 import 'package:black_market/src/features/profile/cubit/ProfileState.dart';
+import 'package:black_market/src/core/widget/SmoothEntryAnimation.dart';
 import '../cubit/HomeCubit.dart';
 import '../cubit/HomeState.dart';
 
@@ -166,270 +167,293 @@ class _HomeScreenState extends State<HomeScreen> {
                         controller: scrollController,
                         physics: const AlwaysScrollableScrollPhysics(),
                         slivers: [
-                        SliverAppBar(
-                          floating: true,
-                          snap: true,
-                          backgroundColor: bgColor,
-                          elevation: 0,
-                          automaticallyImplyLeading: false,
-                          centerTitle: false,
-                          title: BlocBuilder<ProfileCubit, ProfileState>(
-                            builder: (context, state) {
-                              if (state.status == ProfileStatus.loading) {
-                                return const ShimmerWidget();
-                              }
-                              final displayName = state.user?.fullName ?? 'Guest';
-                              return Text(
-                                'Hi, $displayName',
-                                style: GoogleFonts.workSans(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: r.titleSize(22),
-                                  color: themeColor,
-                                  shadows: [
-                                    Shadow(
-                                      color: themeColor.withOpacity(0.8),
-                                      blurRadius: 15,
-                                      offset: const Offset(0, 0),
+                          SliverAppBar(
+                            floating: true,
+                            snap: true,
+                            backgroundColor: bgColor,
+                            elevation: 0,
+                            automaticallyImplyLeading: false,
+                            centerTitle: false,
+                            title: SmoothEntryAnimation(
+                              navIndex: 0,
+                              slideOffset: const Offset(0, -20),
+                              child: BlocBuilder<ProfileCubit, ProfileState>(
+                                builder: (context, state) {
+                                  if (state.status == ProfileStatus.loading) {
+                                    return const ShimmerWidget();
+                                  }
+                                  final displayName = state.user?.fullName ?? 'Guest';
+                                  return Text(
+                                    'Hi, $displayName',
+                                    style: GoogleFonts.workSans(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: r.titleSize(22),
+                                      color: themeColor,
+                                      shadows: [
+                                        Shadow(
+                                          color: themeColor.withOpacity(0.8),
+                                          blurRadius: 15,
+                                          offset: const Offset(0, 0),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              );
-                            },
-                          ),
-                          actions: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 16),
-                              child: Icon(
-                                CupertinoIcons.bell,
-                                size: 24,
-                                color: themeColor,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  );
+                                },
                               ),
                             ),
-                          ],
-                        ),
-                        SliverToBoxAdapter(
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(r.pagePadding.left, 6, r.pagePadding.right, 15),
-                            child: TextField(
-                              controller: searchController,
-                              onChanged: (value) {
-                                context.read<HomeCubit>().search(value);
-                                context.read<HomeCubit>().showSearchSuggestions();
-                              },
-                              onTap: () {
-                                context.read<HomeCubit>().showSearchSuggestions();
-                              },
-                              style: GoogleFonts.workSans(color: themeColor),
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 20,
-                                ),
-                                prefixIcon: Icon(
-                                  CupertinoIcons.search,
-                                  color: themeColor,
-                                ),
-                                border: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(16),
-                                  ),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(16),
-                                  ),
-                                  borderSide: BorderSide(
-                                    color: themeColor.withOpacity(0.5),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(16),
-                                  ),
-                                  borderSide: BorderSide(color: themeColor),
-                                ),
-                                labelText: "Tap for Search",
-                                labelStyle: GoogleFonts.workSans(
-                                  color: themeColor,
-                                  shadows: [
-                                    Shadow(
-                                      color: themeColor.withOpacity(0.5),
-                                      blurRadius: 12,
-                                    ),
-                                  ],
-                                ),
-                                suffixIcon: IconButton(
-                                  onPressed: () {
-                                    searchController.clear();
-                                    context.read<HomeCubit>().search("");
-                                    context
-                                        .read<HomeCubit>()
-                                        .hideSearchSuggestions();
-                                    FocusScope.of(context).unfocus();
-                                  },
-                                  icon: Icon(
-                                    CupertinoIcons.clear,
+                            actions: [
+                              SmoothEntryAnimation(
+                                navIndex: 0,
+                                slideOffset: const Offset(0, -20),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 16),
+                                  child: Icon(
+                                    CupertinoIcons.bell,
+                                    size: 24,
                                     color: themeColor,
                                   ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
-                        ),
                           SliverToBoxAdapter(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: [
-                                  SizedBox(
-                                    width: r.isTablet ? 24 : 12,
-                                  ),
-
-                                  ...[
-                                    'All',
-                                    'Beauty',
-                                    'Daily',
-                                    'Fashion',
-                                    'Tech',
-                                    'Furniture',
-                                    'Watches',
-                                  ].map((category) {
-                                    final isSelected =
-                                        state.selectedCategory == category;
-
-                                    return Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: r.isTablet ? 8 : 6,
+                            child: SmoothEntryAnimation(
+                              navIndex: 0,
+                              slideOffset: const Offset(0, 20),
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(r.pagePadding.left, 6, r.pagePadding.right, 15),
+                                child: TextField(
+                                  controller: searchController,
+                                  onChanged: (value) {
+                                    context.read<HomeCubit>().search(value);
+                                    context.read<HomeCubit>().showSearchSuggestions();
+                                  },
+                                  onTap: () {
+                                    context.read<HomeCubit>().showSearchSuggestions();
+                                  },
+                                  style: GoogleFonts.workSans(color: themeColor),
+                                  decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                      vertical: 20,
+                                    ),
+                                    prefixIcon: Icon(
+                                      CupertinoIcons.search,
+                                      color: themeColor,
+                                    ),
+                                    border: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(16),
                                       ),
-                                      child: ChoiceChip(
-                                        label: Text(
-                                          category,
-                                          style: GoogleFonts.cabin(
-                                            fontSize: r.isTablet ? 16 : 14,
-                                            color: isSelected
-                                                ? Colors.black
-                                                : themeColor,
-                                            fontWeight: isSelected
-                                                ? FontWeight.bold
-                                                : FontWeight.normal,
-                                          ),
-                                        ),
-
-                                        selected: isSelected,
-
-                                        onSelected: (_) {
-                                          context
-                                              .read<HomeCubit>()
-                                              .selectCategory(category);
-                                        },
-
-                                        selectedColor:
-                                        AppColors.instance.cyanAccent,
-
-                                        backgroundColor: isDark
-                                            ? AppColors.instance.shadeblack
-                                            : Colors.grey[200],
-
-                                        showCheckmark: false,
-
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: r.isTablet ? 14 : 12,
-                                          vertical: r.isTablet ? 16 : 13,
-                                        ),
-
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            r.isTablet ? 20 : 16,
-                                          ),
-                                          side: BorderSide(
-                                            color: isSelected
-                                                ? AppColors.instance.cyanAccent
-                                                : Colors.transparent,
-                                          ),
-                                        ),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(16),
                                       ),
-                                    );
-                                  }),
-
-                                  SizedBox(
-                                    width: r.isTablet ? 24 : 16,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        SliverToBoxAdapter(
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
-                            child: Text(
-                              "Recommendations:",
-                              style: GoogleFonts.workSans(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: themeColor,
-                                shadows: [
-                                  Shadow(
-                                    color: themeColor.withOpacity(0.8),
-                                    blurRadius: 15,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        SliverToBoxAdapter(
-                          child: state.featuredProducts.isNotEmpty
-                              ? SizedBox(
-                            width: double.infinity,
-                                  height: r.featuredCarouselHeight,
-                                  child: PageView.builder(
-                                    controller: pageController,
-                                    itemCount: state.featuredProducts.length,
-                                    itemBuilder: (context, index) {
-                                      final product = state.featuredProducts[index];
-                                      return FeaturedProductCard(
-                                        product: product,
-                                        onTap: () {
-                                          AppRouter.push(
-                                            context,
-                                            AppRoutes.sellPage,
-                                            arguments: product,
-                                          );
-                                        },
-                                      );
-                                    },
-                                  ),
-                                )
-                              : SizedBox(
-                                  height: r.featuredCarouselHeight,
-                                  child: PageView.builder(
-                                    controller: PageController(viewportFraction: 0.9),
-                                    itemCount: 3,
-                                    itemBuilder: (context, index) => FeaturedCardShimmer(isDark: isDark),
+                                      borderSide: BorderSide(
+                                        color: themeColor.withOpacity(0.5),
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(16),
+                                      ),
+                                      borderSide: BorderSide(color: themeColor),
+                                    ),
+                                    labelText: "Tap for Search",
+                                    labelStyle: GoogleFonts.workSans(
+                                      color: themeColor,
+                                      shadows: [
+                                        Shadow(
+                                          color: themeColor.withOpacity(0.5),
+                                          blurRadius: 12,
+                                        ),
+                                      ],
+                                    ),
+                                    suffixIcon: IconButton(
+                                      onPressed: () {
+                                        searchController.clear();
+                                        context.read<HomeCubit>().search("");
+                                        context
+                                            .read<HomeCubit>()
+                                            .hideSearchSuggestions();
+                                        FocusScope.of(context).unfocus();
+                                      },
+                                      icon: Icon(
+                                        CupertinoIcons.clear,
+                                        color: themeColor,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                        ),
-                        SliverToBoxAdapter(
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
-                            child: Text(
-                              "Best Sellers:",
-                              style: GoogleFonts.workSans(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: themeColor,
-                                shadows: [
-                                  Shadow(
-                                    color: themeColor.withOpacity(0.8),
-                                    blurRadius: 15,
-                                  ),
-                                ],
                               ),
                             ),
                           ),
-                        ),
+                          SliverToBoxAdapter(
+                            child: SmoothEntryAnimation(
+                              navIndex: 0,
+                              slideOffset: const Offset(20, 0),
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: r.isTablet ? 24 : 12,
+                                    ),
+                                    ...[
+                                      'All',
+                                      'Beauty',
+                                      'Daily',
+                                      'Fashion',
+                                      'Tech',
+                                      'Furniture',
+                                      'Watches',
+                                    ].map((category) {
+                                      final isSelected =
+                                          state.selectedCategory == category;
+
+                                      return Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: r.isTablet ? 8 : 6,
+                                        ),
+                                        child: ChoiceChip(
+                                          label: Text(
+                                            category,
+                                            style: GoogleFonts.cabin(
+                                              fontSize: r.isTablet ? 16 : 14,
+                                              color: isSelected
+                                                  ? Colors.black
+                                                  : themeColor,
+                                              fontWeight: isSelected
+                                                  ? FontWeight.bold
+                                                  : FontWeight.normal,
+                                            ),
+                                          ),
+                                          selected: isSelected,
+                                          onSelected: (_) {
+                                            context
+                                                .read<HomeCubit>()
+                                                .selectCategory(category);
+                                          },
+                                          selectedColor:
+                                              AppColors.instance.cyanAccent,
+                                          backgroundColor: isDark
+                                              ? AppColors.instance.shadeblack
+                                              : Colors.grey[200],
+                                          showCheckmark: false,
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: r.isTablet ? 14 : 12,
+                                            vertical: r.isTablet ? 16 : 13,
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              r.isTablet ? 20 : 16,
+                                            ),
+                                            side: BorderSide(
+                                              color: isSelected
+                                                  ? AppColors.instance.cyanAccent
+                                                  : Colors.transparent,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                                    SizedBox(
+                                      width: r.isTablet ? 24 : 16,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          SliverToBoxAdapter(
+                            child: SmoothEntryAnimation(
+                              navIndex: 0,
+                              slideOffset: const Offset(0, 10),
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
+                                child: Text(
+                                  "Recommendations:",
+                                  style: GoogleFonts.workSans(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                    color: themeColor,
+                                    shadows: [
+                                      Shadow(
+                                        color: themeColor.withOpacity(0.8),
+                                        blurRadius: 15,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SliverToBoxAdapter(
+                            child: state.featuredProducts.isNotEmpty
+                                ? SizedBox(
+                                    width: double.infinity,
+                                    height: r.featuredCarouselHeight,
+                                    child: PageView.builder(
+                                      controller: pageController,
+                                      itemCount: state.featuredProducts.length,
+                                      itemBuilder: (context, index) {
+                                        final product =
+                                            state.featuredProducts[index];
+                                        return SmoothEntryAnimation(
+                                          navIndex: 0,
+                                          slideOffset: const Offset(40, 0),
+                                          child: FeaturedProductCard(
+                                            product: product,
+                                            onTap: () {
+                                              AppRouter.push(
+                                                context,
+                                                AppRoutes.sellPage,
+                                                arguments: product,
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  )
+                                : SizedBox(
+                                    height: r.featuredCarouselHeight,
+                                    child: PageView.builder(
+                                      controller:
+                                          PageController(viewportFraction: 0.9),
+                                      itemCount: 3,
+                                      itemBuilder: (context, index) =>
+                                          FeaturedCardShimmer(isDark: isDark),
+                                    ),
+                                  ),
+                          ),
+                          SliverToBoxAdapter(
+                            child: SmoothEntryAnimation(
+                              navIndex: 0,
+                              slideOffset: const Offset(0, 10),
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
+                                child: Text(
+                                  "Best Sellers:",
+                                  style: GoogleFonts.workSans(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                    color: themeColor,
+                                    shadows: [
+                                      Shadow(
+                                        color: themeColor.withOpacity(0.8),
+                                        blurRadius: 15,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
                         SliverPadding(
                           padding: EdgeInsets.fromLTRB(r.pagePadding.left, 0, r.pagePadding.right, 0),
                           sliver: ProductGrid(

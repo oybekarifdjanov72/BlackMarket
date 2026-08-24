@@ -8,6 +8,7 @@ import 'package:black_market/src/features/home/presentation/cubit/HomeCubit.dart
 import 'package:black_market/src/features/home/presentation/cubit/HomeState.dart';
 import 'package:black_market/src/features/home/presentation/widget/ProductCardWidget.dart';
 
+import '../../../../core/widget/SmoothEntryAnimation.dart';
 import '../../../basket/cubit/BasketCubit.dart';
 
 class ProductGrid extends StatelessWidget {
@@ -116,7 +117,7 @@ class ProductGrid extends StatelessWidget {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 final product = products[index];
-                return ProductCard(
+                final card = ProductCard(
                   product: product,
                   onTap: () {
                     AppRouter.push(
@@ -129,6 +130,18 @@ class ProductGrid extends StatelessWidget {
                     context.read<BasketCubit>().addToBasket(product);
                   },
                 );
+
+                if (index < 2) {
+                  return SmoothEntryAnimation(
+                    navIndex: 0,
+                    duration: const Duration(milliseconds: 800),
+                    curve: Curves.easeOutQuart,
+                    slideOffset: const Offset(0, 30),
+                    child: card,
+                  );
+                }
+
+                return card;
               },
               childCount: products.length,
             ),

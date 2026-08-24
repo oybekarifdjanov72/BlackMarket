@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toastification/toastification.dart';
 import 'package:black_market/src/core/utils/responsive/AppResponsive.dart';
+import 'package:black_market/src/core/widget/SmoothEntryAnimation.dart';
 import '../../../core/model/ProductsModel.dart';
 import '../../../core/consts/AppColors.dart';
 import '../cubit/FavoritesCubit.dart';
@@ -30,19 +31,23 @@ class FavoritePage extends StatelessWidget {
             backgroundColor: bgColor,
             elevation: 0,
             centerTitle: true,
-            title: Text(
-              "Favorites",
-              style: GoogleFonts.workSans(
-                fontSize: r.titleSize(24),
-                fontWeight: FontWeight.bold,
-                color: themeColor,
-                shadows: [
-                  Shadow(
-                    blurRadius: 10.0,
-                    color: themeColor.withOpacity(0.8),
-                    offset: const Offset(0, 0),
-                  ),
-                ],
+            title: SmoothEntryAnimation(
+              navIndex: 2,
+              slideOffset: const Offset(0, -20),
+              child: Text(
+                "Favorites",
+                style: GoogleFonts.workSans(
+                  fontSize: r.titleSize(24),
+                  fontWeight: FontWeight.bold,
+                  color: themeColor,
+                  shadows: [
+                    Shadow(
+                      blurRadius: 10.0,
+                      color: themeColor.withOpacity(0.8),
+                      offset: const Offset(0, 0),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -58,7 +63,11 @@ class FavoritePage extends StatelessWidget {
                   itemCount: state.favorites.length,
                   itemBuilder: (context, index) {
                     final product = state.favorites[index];
-                    return _FavoriteCard(product: product, themeColor: themeColor);
+                    return SmoothEntryAnimation(
+                      navIndex: 2,
+                      delay: Duration(milliseconds: index * 100),
+                      child: _FavoriteCard(product: product, themeColor: themeColor),
+                    );
                   },
                 );
               },
@@ -247,22 +256,25 @@ class _FavoriteCard extends StatelessWidget {
                         ),
 
                         const SizedBox(height: 4),
-
-                        Text(
-                          "\$${product.price}",
-                          style: GoogleFonts.workSans(
-                            color: Colors.red,
-                            fontSize: r.bodySize(20),
-                            fontWeight: FontWeight.bold,
-                            shadows: [
-                              Shadow(
-                                blurRadius: 10.0,
-                                color: AppColors.instance.red.withOpacity(
-                                  0.8,
+                        SmoothEntryAnimation(
+                          delay: const Duration(milliseconds: 200),
+                          slideOffset: const Offset(10, 0),
+                          child: Text(
+                            "\$${product.price}",
+                            style: GoogleFonts.workSans(
+                              color: Colors.red,
+                              fontSize: r.bodySize(20),
+                              fontWeight: FontWeight.bold,
+                              shadows: [
+                                Shadow(
+                                  blurRadius: 10.0,
+                                  color: AppColors.instance.red.withOpacity(
+                                    0.8,
+                                  ),
+                                  offset: const Offset(0, 0),
                                 ),
-                                offset: const Offset(0, 0),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ],

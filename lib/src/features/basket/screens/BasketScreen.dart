@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:black_market/src/core/utils/responsive/AppResponsive.dart';
+import 'package:black_market/src/core/widget/SmoothEntryAnimation.dart';
 import '../../../core/consts/AppColors.dart';
 import '../../../core/consts/AppRouter.dart';
 import '../../settings/cubit/SettingsCubit.dart';
@@ -28,40 +29,44 @@ class BasketScreen extends StatelessWidget {
             backgroundColor: bgColor,
             elevation: 0,
             centerTitle: true,
-            title: RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Your ',
-                    style: GoogleFonts.workSans(
-                      fontSize: r.titleSize(26),
-                      fontWeight: FontWeight.bold,
-                      color: themeColor,
-                      shadows: [
-                        Shadow(
-                          blurRadius: 10.0,
-                          color: themeColor.withOpacity(0.8),
-                          offset: const Offset(0, 0),
-                        ),
-                      ],
+            title: SmoothEntryAnimation(
+              navIndex: 1,
+              slideOffset: const Offset(0, -20),
+              child: RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Your ',
+                      style: GoogleFonts.workSans(
+                        fontSize: r.titleSize(26),
+                        fontWeight: FontWeight.bold,
+                        color: themeColor,
+                        shadows: [
+                          Shadow(
+                            blurRadius: 10.0,
+                            color: themeColor.withOpacity(0.8),
+                            offset: const Offset(0, 0),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  TextSpan(
-                    text: 'Basket',
-                    style: GoogleFonts.workSans(
-                      fontSize: r.titleSize(26),
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.instance.cyanAccent,
-                      shadows: [
-                        Shadow(
-                          blurRadius: 10.0,
-                          color: AppColors.instance.cyanAccent.withOpacity(0.8),
-                          offset: const Offset(0, 0),
-                        ),
-                      ],
+                    TextSpan(
+                      text: 'Basket',
+                      style: GoogleFonts.workSans(
+                        fontSize: r.titleSize(26),
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.instance.cyanAccent,
+                        shadows: [
+                          Shadow(
+                            blurRadius: 10.0,
+                            color: AppColors.instance.cyanAccent.withOpacity(0.8),
+                            offset: const Offset(0, 0),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -77,13 +82,21 @@ class BasketScreen extends StatelessWidget {
                   itemCount: state.items.length,
                   itemBuilder: (context, index) {
                     final item = state.items[index];
-                    return _BasketItemCard(item: item, isDark: isDark, themeColor: themeColor);
+                    return SmoothEntryAnimation(
+                      navIndex: 1,
+                      delay: Duration(milliseconds: index * 100),
+                      child: _BasketItemCard(item: item, isDark: isDark, themeColor: themeColor),
+                    );
                   },
                 );
               },
             ),
           ),
-          bottomNavigationBar: _BasketBottomBar(isDark: isDark, themeColor: themeColor, bgColor: bgColor),
+          bottomNavigationBar: SmoothEntryAnimation(
+            navIndex: 1,
+            slideOffset: const Offset(0, 40),
+            child: _BasketBottomBar(isDark: isDark, themeColor: themeColor, bgColor: bgColor),
+          ),
         );
       },
     );
@@ -248,35 +261,43 @@ class _BasketBottomBar extends StatelessWidget {
                       "Total:",
                       style: GoogleFonts.workSans(color: themeColor, fontSize: r.bodySize(24), fontWeight: FontWeight.bold),
                     ),
-                    Text(
-                      "\$${state.totalPrice.toStringAsFixed(2)}",
-                      style: GoogleFonts.workSans(
-                        color: themeColor, 
-                        fontSize: r.bodySize(24), 
-                        fontWeight: FontWeight.bold,
-                        shadows: [
-                          Shadow(color: themeColor.withOpacity(0.5), blurRadius: 10),
-                        ],
+                    SmoothEntryAnimation(
+                      delay: const Duration(milliseconds: 200),
+                      slideOffset: const Offset(20, 0),
+                      child: Text(
+                        "\$${state.totalPrice.toStringAsFixed(2)}",
+                        style: GoogleFonts.workSans(
+                          color: themeColor, 
+                          fontSize: r.bodySize(24), 
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(color: themeColor.withOpacity(0.5), blurRadius: 10),
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
                 SizedBox(height: r.isSmallMobile ? 14 : 16),
-                ElevatedButton(
-                  onPressed: () {
-                    AppRouter.push(context, AppRoutes.checkOut);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isDark ? Colors.white : Colors.black,
-                    minimumSize: Size(double.infinity, r.isSmallMobile ? 52 : 60),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  ),
-                  child: Text(
-                    "CHECKOUT",
-                    style: GoogleFonts.workSans(
-                      color: isDark ? Colors.black : Colors.white,
-                      fontSize: r.bodySize(18),
-                      fontWeight: FontWeight.bold,
+                SmoothEntryAnimation(
+                  delay: const Duration(milliseconds: 400),
+                  slideOffset: const Offset(0, 20),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      AppRouter.push(context, AppRoutes.checkOut);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isDark ? Colors.white : Colors.black,
+                      minimumSize: Size(double.infinity, r.isSmallMobile ? 52 : 60),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    ),
+                    child: Text(
+                      "CHECKOUT",
+                      style: GoogleFonts.workSans(
+                        color: isDark ? Colors.black : Colors.white,
+                        fontSize: r.bodySize(18),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),

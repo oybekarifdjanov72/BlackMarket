@@ -12,6 +12,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/widget/SmoothEntryAnimation.dart';
+
 class BottomNavigationBarWidget extends StatefulWidget {
   const BottomNavigationBarWidget({super.key});
 
@@ -60,6 +62,9 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget>
   void _onTap(int index) {
     if (_selectedIndex == index) return;
     setState(() => _selectedIndex = index);
+    
+    // Notify screens to trigger animations when the index changes
+    SmoothAnimationTrigger.trigger(index);
   }
 
   @override
@@ -134,7 +139,6 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget>
                       return Stack(
                         alignment: Alignment.center,
                         children: [
-                          // Floating Glowing Indicator (Premium Cyan Glow)
                           AnimatedPositioned(
                             duration: const Duration(milliseconds: 450),
                             curve: Curves.easeOutQuart,

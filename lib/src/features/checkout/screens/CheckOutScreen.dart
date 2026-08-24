@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:black_market/src/core/widget/SmoothEntryAnimation.dart';
 import 'package:black_market/src/core/utils/responsive/AppResponsive.dart';
 import '../../../core/consts/AppColors.dart';
 import '../../../core/consts/AppRouter.dart';
@@ -79,33 +80,36 @@ class _DeliveryPageState extends State<DeliveryPage>
                 backgroundColor: bgColor,
                 elevation: 0,
                 centerTitle: true,
-                title: RichText(
-                  text: TextSpan(
-                    style: GoogleFonts.workSans(
-                      fontSize: r.titleSize(24),
-                      fontWeight: FontWeight.bold,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: "Delivery ",
-                        style: TextStyle(color: themeColor),
+                title: SmoothEntryAnimation(
+                  slideOffset: const Offset(0, -20),
+                  child: RichText(
+                    text: TextSpan(
+                      style: GoogleFonts.workSans(
+                        fontSize: r.titleSize(24),
+                        fontWeight: FontWeight.bold,
                       ),
-                      TextSpan(
-                        text: "Details",
-                        style: TextStyle(
-                          color: AppColors.instance.cyanAccent,
-                          shadows: [
-                            Shadow(
-                              blurRadius: 10,
-                              color: AppColors.instance.cyanAccent.withOpacity(
-                                0.8,
-                              ),
-                              offset: const Offset(0, 0),
-                            ),
-                          ],
+                      children: [
+                        TextSpan(
+                          text: "Delivery ",
+                          style: TextStyle(color: themeColor),
                         ),
-                      ),
-                    ],
+                        TextSpan(
+                          text: "Details",
+                          style: TextStyle(
+                            color: AppColors.instance.cyanAccent,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 10,
+                                color: AppColors.instance.cyanAccent.withOpacity(
+                                  0.8,
+                                ),
+                                offset: const Offset(0, 0),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -113,8 +117,8 @@ class _DeliveryPageState extends State<DeliveryPage>
                 child: Column(
                   children: [
                     Expanded(
-                      child: FadeTransition(
-                        opacity: _animation,
+                      child: SmoothEntryAnimation(
+                        slideOffset: const Offset(0, 30),
                         child: Container(
                           margin: const EdgeInsets.symmetric(vertical: 8),
                           padding: EdgeInsets.all(r.isSmallMobile ? 12 : 16),
@@ -276,115 +280,120 @@ class _DeliveryPageState extends State<DeliveryPage>
                       ),
                     ),
                     const SizedBox(height: 10),
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.all(r.isSmallMobile ? 12 : 16),
-                      decoration: BoxDecoration(
-                        color: containerColor,
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(color: themeColor.withOpacity(0.1)),
-                      ),
-                      child: Column(
-                        children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Deliver:",
-                              style: GoogleFonts.workSans(
-                                fontSize: r.bodySize(20),
-                                fontWeight: FontWeight.bold,
-                                color: themeColor,
+                    SmoothEntryAnimation(
+                      delay: const Duration(milliseconds: 200),
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(r.isSmallMobile ? 12 : 16),
+                        decoration: BoxDecoration(
+                          color: containerColor,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(color: themeColor.withOpacity(0.1)),
+                        ),
+                        child: Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Deliver:",
+                                style: GoogleFonts.workSans(
+                                  fontSize: r.bodySize(20),
+                                  fontWeight: FontWeight.bold,
+                                  color: themeColor,
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                radius: r.isSmallMobile ? 24 : 30,
-                                backgroundColor: AppColors.instance.white,
-                                child: Icon(
-                                  CupertinoIcons.person,
-                                  size: r.isSmallMobile ? 22 : 28,
-                                ),
-                              ),
-                              const SizedBox(width: 15),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Oybek",
-                                      style: GoogleFonts.workSans(
-                                        color: themeColor,
-                                        fontSize: r.bodySize(18),
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      "Courier - ETA: 15-20 mins",
-                                      style: GoogleFonts.workSans(
-                                        color: themeColor.withOpacity(0.7),
-                                        fontSize: r.bodySize(13),
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              InkWell(
-                                borderRadius: BorderRadius.circular(30),
-                                onTap: () => _makePhoneCall('+998935161193'),
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.instance.greenAccent,
-                                    shape: BoxShape.circle,
-                                  ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: r.isSmallMobile ? 24 : 30,
+                                  backgroundColor: AppColors.instance.white,
                                   child: Icon(
-                                    Icons.phone,
-                                    color: isDark ? Colors.black : Colors.white,
-                                    size: r.isSmallMobile ? 24 : 30,
+                                    CupertinoIcons.person,
+                                    size: r.isSmallMobile ? 22 : 28,
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                                const SizedBox(width: 15),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Oybek",
+                                        style: GoogleFonts.workSans(
+                                          color: themeColor,
+                                          fontSize: r.bodySize(18),
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Courier - ETA: 15-20 mins",
+                                        style: GoogleFonts.workSans(
+                                          color: themeColor.withOpacity(0.7),
+                                          fontSize: r.bodySize(13),
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                InkWell(
+                                  borderRadius: BorderRadius.circular(30),
+                                  onTap: () => _makePhoneCall('+998935161193'),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.instance.greenAccent,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      Icons.phone,
+                                      color: isDark ? Colors.black : Colors.white,
+                                      size: r.isSmallMobile ? 24 : 30,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          await context.read<BasketCubit>().checkout();
+                    SmoothEntryAnimation(
+                      delay: const Duration(milliseconds: 400),
+                      slideOffset: const Offset(0, 20),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                        onPressed: () {
                           if (mounted) {
-                            AppRouter.pushAndRemoveUntil(
+                            AppRouter.push(
                               context,
                               AppRoutes.payment,
-                              (route) => false,
                             );
                           }
                         },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: isDark
-                              ? AppColors.instance.white
-                              : AppColors.instance.black,
-                          padding: EdgeInsets.symmetric(
-                            vertical: r.isSmallMobile ? 14 : 20,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: isDark
+                                ? AppColors.instance.white
+                                : AppColors.instance.black,
+                            padding: EdgeInsets.symmetric(
+                              vertical: r.isSmallMobile ? 14 : 20,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        child: Text(
-                          "CONFIRM PURCHASE",
-                          style: GoogleFonts.workSans(
-                            fontSize: r.bodySize(18),
-                            fontWeight: FontWeight.bold,
-                            color: isDark ? Colors.black : Colors.white,
+                          child: Text(
+                            "CONFIRM PURCHASE",
+                            style: GoogleFonts.workSans(
+                              fontSize: r.bodySize(18),
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? Colors.black : Colors.white,
+                            ),
                           ),
                         ),
                       ),
