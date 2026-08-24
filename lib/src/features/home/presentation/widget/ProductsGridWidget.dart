@@ -26,8 +26,8 @@ class ProductGrid extends StatelessWidget {
     final gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
       crossAxisCount: r.productGridColumns,
       childAspectRatio: r.productGridAspectRatio,
-      crossAxisSpacing: r.isSmallMobile ? 12 : 16,
-      mainAxisSpacing: r.isSmallMobile ? 12 : 16,
+      crossAxisSpacing: r.isSmallMobile ? 8 : 12,
+      mainAxisSpacing: r.isSmallMobile ? 8 : 12,
     );
 
     return BlocBuilder<HomeCubit, HomeState>(
@@ -76,7 +76,7 @@ class ProductGrid extends StatelessWidget {
                       icon: const Icon(Icons.refresh),
                       label: Text(
                         'Try again',
-                        style: GoogleFonts.workSans(fontWeight: FontWeight.w600),
+                        style: GoogleFonts.workSans(fontWeight: FontWeight.bold),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -102,7 +102,7 @@ class ProductGrid extends StatelessWidget {
                 "No products found",
                 style: GoogleFonts.workSans(
                   color: themeColor,
-                  fontSize: r.bodySize(18),
+                  fontSize: r.bodySize(20),
                 ),
               ),
             ),
@@ -153,7 +153,7 @@ class SoftSliverPadding extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final r = AppResponsive.of(context);
-    final h = r.isSmallMobile ? 8.0 : 12.0; // Reduced from 16 to fit better
+    final h = r.isSmallMobile ? 6.0 : 8.0; // Reduced from 16 to fit better
     return SliverPadding(
       padding: EdgeInsets.fromLTRB(h, 0, h, bottom ?? 0),
       sliver: child,

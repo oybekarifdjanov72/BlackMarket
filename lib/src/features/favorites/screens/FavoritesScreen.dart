@@ -121,7 +121,7 @@ class _FavoriteCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network(
                       product.thumbnail,
-                      width: r.value(mobile: 100, smallMobile: 80, tablet: 120),
+                      width: r.value(mobile: 120, smallMobile: 80, tablet: 140),
                       height: r.value(mobile: 100, smallMobile: 80, tablet: 120),
                       fit: BoxFit.contain,
                     ),
@@ -131,14 +131,13 @@ class _FavoriteCard extends StatelessWidget {
                 Expanded(
                   child: SizedBox(
                     height: r.value(
-                      mobile: 120,
-                      smallMobile: 100,
-                      tablet: 140,
+                      mobile: 140,
+                      smallMobile: 120,
+                      tablet: 160,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // TITLE + DELETE
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -157,7 +156,6 @@ class _FavoriteCard extends StatelessWidget {
 
                             const SizedBox(width: 6),
 
-                            // DELETE BUTTON
                             Material(
                               color: Colors.transparent,
                               child: InkWell(
@@ -168,6 +166,7 @@ class _FavoriteCard extends StatelessWidget {
                                       .toggleFavorite(product);
 
                                   toastification.show(
+                                    autoCloseDuration: Duration(seconds: 3),
                                     type: ToastificationType.info,
                                     title: Text(
                                       "${product.title} was removed",
@@ -179,19 +178,19 @@ class _FavoriteCard extends StatelessWidget {
                                   );
                                 },
                                 child: Container(
-                                  width: 32,
-                                  height: 32,
+                                  width: 36,
+                                  height: 36,
                                   decoration: BoxDecoration(
-                                    color: Colors.red.withOpacity(0.08),
+                                    color: Colors.red.withOpacity(0.09),
                                     borderRadius: BorderRadius.circular(8),
                                     border: Border.all(
-                                      color: Colors.red.withOpacity(0.15),
+                                      color: Colors.red.withOpacity(0.18),
                                     ),
                                   ),
                                   child: const Icon(
                                     Icons.delete_outline_rounded,
                                     color: Colors.red,
-                                    size: 19,
+                                    size: 22,
                                   ),
                                 ),
                               ),
@@ -201,7 +200,6 @@ class _FavoriteCard extends StatelessWidget {
 
                         const SizedBox(height: 2),
 
-                        // BRAND
                         Text(
                           product.brand,
                           maxLines: 1,
@@ -248,7 +246,7 @@ class _FavoriteCard extends StatelessWidget {
                           ),
                         ),
 
-                        const SizedBox(height: 3),
+                        const SizedBox(height: 4),
 
                         Text(
                           "\$${product.price}",
@@ -256,6 +254,15 @@ class _FavoriteCard extends StatelessWidget {
                             color: Colors.red,
                             fontSize: r.bodySize(20),
                             fontWeight: FontWeight.bold,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 10.0,
+                                color: AppColors.instance.red.withOpacity(
+                                  0.8,
+                                ),
+                                offset: const Offset(0, 0),
+                              ),
+                            ],
                           ),
                         ),
                       ],

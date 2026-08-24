@@ -79,7 +79,7 @@ class SettingsView extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: r.value(mobile: 10.0, tablet: 0.0),
-                  vertical: r.value(mobile: 12.0, smallMobile: 8.0),
+                  vertical: r.value(mobile: 8.0, smallMobile: 6.0),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

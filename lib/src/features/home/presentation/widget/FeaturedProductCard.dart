@@ -29,7 +29,10 @@ class FeaturedProductCard extends StatelessWidget {
         return GestureDetector(
           onTap: onTap,
           child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 4), // Increased horizontal margin to reduce width
+            margin: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 4,
+            ),
             padding: EdgeInsets.all(r.isSmallMobile ? 10 : 12),
             decoration: BoxDecoration(
               color: cardColor,
@@ -46,7 +49,7 @@ class FeaturedProductCard extends StatelessWidget {
               children: [
                 // Left side: Image
                 Expanded(
-                  flex: 2,
+                  flex: 5,
                   child: Container(
                     height: double.infinity,
                     decoration: BoxDecoration(
@@ -67,10 +70,10 @@ class FeaturedProductCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: r.isSmallMobile ? 12 : 15),
+                SizedBox(width: r.isSmallMobile ? 6 : 8),
                 // Right side: Info
                 Expanded(
-                  flex: 3,
+                  flex: 6,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,12 +146,12 @@ class FeaturedProductCard extends StatelessWidget {
                             fontSize: r.bodySize(11),
                           ),
                         ),
-                      SizedBox(height: r.isSmallMobile ? 4 : 6),
+                      SizedBox(height: r.isSmallMobile ? 2 : 2),
                       Text(
                         "\$${product.price}",
                         style: GoogleFonts.workSans(
                           color: AppColors.instance.red,
-                          fontSize: r.titleSize(18),
+                          fontSize: r.titleSize(16),
                           fontWeight: FontWeight.w900,
                           shadows: [
                             Shadow(

@@ -37,10 +37,10 @@ class AppResponsive {
     if (isTablet) {
       return const EdgeInsets.symmetric(horizontal: 24, vertical: 12);
     }
-    return const EdgeInsets.symmetric(horizontal: 10, vertical: 8); // Reduced vertical padding
+    return const EdgeInsets.symmetric(horizontal: 10, vertical: 6);
   }
 
-  double get sectionGap => isSmallMobile ? 5 : (isTablet ? 18 : 8); // Reduced section gap
+  double get sectionGap => isSmallMobile ? 0 : (isTablet ? 10 : 3); // Reduced section gap
 
   double get featuredCardRadius => isSmallMobile ? 16 : 24;
   double get gridCardRadius => isSmallMobile ? 14 : 20; // Reduced for grid cards
@@ -52,15 +52,15 @@ class AppResponsive {
   }
 
   double get productGridAspectRatio {
-    if (isSmallMobile) return 0.60;
-    if (isTablet) return 0.75;
-    return 0.65;
+    if (isSmallMobile) return 0.62;
+    if (isTablet) return 0.72;
+    return 0.60; // Taller cards to fit content better
   }
 
   double get featuredCarouselHeight {
-    if (isSmallMobile) return 150; // Increased
-    if (isTablet) return 220; // Increased
-    return 180; // Increased
+    if (isSmallMobile) return 160;
+    if (isTablet) return 205;
+    return 170;
   }
 
   double titleSize(double base) {

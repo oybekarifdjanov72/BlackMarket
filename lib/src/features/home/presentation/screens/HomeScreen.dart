@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/rendering.dart';
 import 'package:black_market/src/features/home/presentation/widget/FeaturedProductCard.dart';
 import 'package:black_market/src/features/home/presentation/widget/ProductsGridWidget.dart';
 import 'package:black_market/src/features/settings/cubit/SettingsCubit.dart';
@@ -26,7 +27,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final ScrollController scrollController = ScrollController();
   final SearchController searchController = SearchController();
-  final PageController pageController = PageController(viewportFraction: 0.85);
+  final PageController pageController = PageController(viewportFraction: 0.90);
   Timer? _timer;
 
   List<TextSpan> _highlightMatch(
@@ -96,6 +97,13 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     scrollController.addListener(() {
+      // Hide suggestions when user starts scrolling
+      if (scrollController.position.userScrollDirection != ScrollDirection.idle) {
+        if (context.read<HomeCubit>().state.showSuggestions) {
+          context.read<HomeCubit>().hideSearchSuggestions();
+        }
+      }
+
       if (scrollController.position.pixels >=
           scrollController.position.maxScrollExtent - 200) {
         context.read<HomeCubit>().loadMore();
@@ -358,7 +366,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Text(
                               "Recommendations:",
                               style: GoogleFonts.workSans(
-                                fontSize: 20,
+                                fontSize: 22,
                                 fontWeight: FontWeight.bold,
                                 color: themeColor,
                                 shadows: [
@@ -409,7 +417,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Text(
                               "Best Sellers:",
                               style: GoogleFonts.workSans(
-                                fontSize: 20,
+                                fontSize: 22,
                                 fontWeight: FontWeight.bold,
                                 color: themeColor,
                                 shadows: [
@@ -437,7 +445,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Positioned(
                         left: 16,
                         right: 16,
-                        top: 155,
+                        top: 165,
                         child: Material(
                           elevation: 10,
                           borderRadius: BorderRadius.circular(12),

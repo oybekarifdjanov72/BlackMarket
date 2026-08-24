@@ -275,9 +275,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Padding(
                             padding: EdgeInsets.symmetric(
                               horizontal: r.value(
-                                mobile: 20,
+                                mobile: 16,
                                 smallMobile: 14,
-                                tablet: 28,
+                                tablet: 24,
                               ),
                             ),
                             child: Row(
@@ -308,7 +308,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
                                       ),
-                                      minimumSize: Size(0, r.value(mobile: 60, smallMobile: 55)), // Increased height, width is handled by Expanded
+                                      minimumSize: Size(0, r.value(mobile: 55, smallMobile: 50)),
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
@@ -348,7 +348,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
                                       ),
-                                      minimumSize: Size(0, r.value(mobile: 60, smallMobile: 55)), // Increased height
+                                      minimumSize: Size(0, r.value(mobile: 55, smallMobile: 50)),
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,

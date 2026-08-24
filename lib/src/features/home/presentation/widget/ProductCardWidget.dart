@@ -98,8 +98,8 @@ class ProductCard extends StatelessWidget {
                   flex: 6,
                   child: Padding(
                     padding: EdgeInsets.symmetric(
-                      horizontal: r.isSmallMobile ? 6 : 8,
-                      vertical: r.isSmallMobile ? 8 : 10,
+                      horizontal: r.isSmallMobile ? 8 : 10,
+                      vertical: r.isSmallMobile ? 7 : 9,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,7 +111,7 @@ class ProductCard extends StatelessWidget {
                           style: GoogleFonts.workSans(
                             color: themeColor,
                             fontWeight: FontWeight.bold,
-                            fontSize: r.bodySize(16),
+                            fontSize: r.bodySize(15),
                           ),
                         ),
                         Text(
@@ -120,7 +120,7 @@ class ProductCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.workSans(
                             color: themeColorSecondary,
-                            fontSize: r.bodySize(13),
+                            fontSize: r.bodySize(12),
                           ),
                         ),
                         SizedBox(height: r.isSmallMobile ? 2 : 4),
@@ -168,25 +168,30 @@ class ProductCard extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
+                        const SizedBox(height: 10), // Minimum 10px space
                         const Spacer(),
                         Row(
                           children: [
                             Expanded(
-                              child: Text(
-                                "\$${product.price}",
-                                style: GoogleFonts.workSans(
-                                  color: AppColors.instance.red,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: r.bodySize(18),
-                                  shadows: [
-                                    Shadow(
-                                      blurRadius: 10.0,
-                                      color: AppColors.instance.red.withOpacity(
-                                        0.8,
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "\$${product.price}",
+                                  style: GoogleFonts.workSans(
+                                    color: AppColors.instance.red,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: r.bodySize(18),
+                                    shadows: [
+                                      Shadow(
+                                        blurRadius: 10.0,
+                                        color: AppColors.instance.red.withOpacity(
+                                          0.8,
+                                        ),
+                                        offset: const Offset(0, 0),
                                       ),
-                                      offset: const Offset(0, 0),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -198,7 +203,7 @@ class ProductCard extends StatelessWidget {
                                     "${product.title} added to basket",
                                     style: GoogleFonts.workSans(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: r.bodySize(16),
+                                      fontSize: r.bodySize(15),
                                     ),
                                   ),
                                   type: ToastificationType.info,
@@ -219,7 +224,7 @@ class ProductCard extends StatelessWidget {
                                   color: isDark
                                       ? AppColors.instance.black
                                       : AppColors.instance.white,
-                                  size: r.isSmallMobile ? 18 : 22,
+                                  size: r.isSmallMobile ? 18 : 24,
                                 ),
                               ),
                             ),
